@@ -101,11 +101,12 @@ function TarkovItems() {
 	const itemsPerPage = 10;
 
 	const allItems = `query ($page: Int, $itemsPerPage: Int) {
-    items(limit: $itemsPerPage, offset: $page){
-      id
-      name
-      shortName
-    }
+    	items(limit: $itemsPerPage, offset: $page){
+			id
+			name
+			shortName
+			iconLink
+			}
   	}`;
 
 	const { data, status } = useQuery(
@@ -144,11 +145,33 @@ function TarkovItems() {
 			All items
 			{status === "success" ? (
 				<>
-					<ul>
-						{tarkovItems.map((item: { id: string; name: string }) => (
-							<li key={item.id}>{item.name}</li>
-						))}
-					</ul>
+					<table>
+						<thead>
+							<tr role="row">
+								<th></th>
+								<th>ShortName</th>
+								<th>Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							{tarkovItems.map(
+								(item: {
+									id: string;
+									name: string;
+									shortName: string;
+									iconLink: string;
+								}) => (
+									<tr className="border p-5" key={item.id}>
+										<td>
+											<img src={item.iconLink} alt="" />
+										</td>
+										<td className="p-2 border">{item.shortName}</td>
+										<td className="p-2">{item.name}</td>
+									</tr>
+								)
+							)}
+						</tbody>
+					</table>
 					<div className="flex flex-row justify-between gap-5 mt-5 font-bold">
 						<a
 							className="group flex items-center cursor-pointer hover:text-slate-900 dark:hover:text-white"
@@ -162,9 +185,9 @@ function TarkovItems() {
 									d="M3 0L0 3L3 6"
 									fill="none"
 									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
 								></path>
 							</svg>
 							Previous
@@ -182,9 +205,9 @@ function TarkovItems() {
 									d="M0 0L3 3L0 6"
 									fill="none"
 									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
 								></path>
 							</svg>
 						</a>
