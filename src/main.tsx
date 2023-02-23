@@ -20,15 +20,17 @@ const router = createBrowserRouter([
 		path: "/",
 		element: <Root />,
 		errorElement: <ErrorPage />,
-	},
-	{
-		path: "items",
-		element: <Items />,
-	},
+		children: [
+			{
+				path: "items",
+				element: <Items />,
+			},
 
-	{
-		path: "traders",
-		element: <Traders />,
+			{
+				path: "traders",
+				element: <Traders />,
+			},
+		],
 	},
 ]);
 
