@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 
 export default function Root() {
 	return (
-		<>
+		<div className="flex flex-col w-full items-center">
 			<div id="sidebar">
 				<div className="flex flex-col items-center ">
 					<h1 className="text- text-4xl ">Tarkov API Consumption</h1>
@@ -18,9 +18,9 @@ export default function Root() {
 					</nav>
 				</div>
 			</div>
-			<div id="detail">
+			<div className="flex flex-col w-2/3 justify-center align-middle items-center">
 				<Outlet />
 			</div>
-		</>
+		</div>
 	);
 }
