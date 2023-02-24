@@ -1,9 +1,19 @@
 import { useState } from "react";
 const apiEndPoint = "https://api.tarkov.dev/graphql";
 import { useQuery } from "react-query";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+interface Trader {
+	name: string;
+	description: string;
+	imageLink: string;
+}
 
 export default function TarkovTraders() {
-	const [tarkovTraders, setTarkovTraders] = useState([]);
+	const [tarkovTraders, setTarkovTraders] = useState<
+		Array<Trader>
+	>(Array(10).fill(0));
 
 	const allTraders = `query {
 		traders {
@@ -13,29 +23,35 @@ export default function TarkovTraders() {
 		}
 	}`;
 
+	const fetchTraders = async () => {
+		const response = await fetch(apiEndPoint, {
+			method: "post",
+			headers: {
+				"Content-Type": "applicaton/json",
+			},
+			body: JSON.stringify({
+				query: allTraders,
+			}),
+		});
+		const data = await response.json();
+		return data;
+	};
+
 	const { data: traderData, status: traderStatus } = useQuery(
 		[allTraders],
-		() => {
-			fetch(apiEndPoint, {
-				method: "post",
-				headers: {
-					"Content-Type": "applicaton/json",
-				},
-				body: JSON.stringify({
-					query: allTraders,
-				}),
-			})
-				.then(res => res.json())
-				.then(res => {
-					setTarkovTraders(res.data.traders);
-				});
+		fetchTraders,
+		{
+			onSuccess: data => {
+				setTarkovTraders(data.data.traders);
+			},
 		}
 	);
 
 	return (
-		<div>
+		<div className="w-full">
 			All traders
-			<table className="table-auto border-gray-200 border">
+			{traderStatus === "error" && <div>Error fetching data</div>}
+			<table className="table-auto border-gray-200 border w-full">
 				<tbody>
 					{tarkovTraders.map(
 						(trader: {
@@ -43,14 +59,19 @@ export default function TarkovTraders() {
 							description: string;
 							imageLink: string;
 						}) => (
-							<tr className="border " key={trader.name}>
-								<th className="border">
-									<img src={trader.imageLink} alt="trader image" />
-									{trader.name}
-								</th>
-								<th className="border p-4 text-left font-light">
-									{trader.description}
-								</th>
+							<tr className="border w-full" key={trader.name}>
+								<td className="border w-[90px] h-[115px]">
+									{trader.imageLink ? (
+										<img src={trader.imageLink} alt="trader image" />
+									) : (
+										<Skeleton height={85} />
+									)}
+
+									{trader.name || <Skeleton />}
+								</td>
+								<td className="border p-4 text-left font-light">
+									{trader.description || <Skeleton count={4} />}
+								</td>
 							</tr>
 						)
 					)}
