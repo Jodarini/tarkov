@@ -1,7 +1,9 @@
 import { useState } from "react";
 const apiEndPoint = "https://api.tarkov.dev/graphql";
 import { useQuery } from "react-query";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, {
+	SkeletonTheme,
+} from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 interface Trader {
@@ -59,20 +61,22 @@ export default function TarkovTraders() {
 							description: string;
 							imageLink: string;
 						}) => (
-							<tr className="border w-full" key={trader.name}>
-								<td className="border w-[90px] h-[115px]">
-									{trader.imageLink ? (
-										<img src={trader.imageLink} alt="trader image" />
-									) : (
-										<Skeleton height={85} />
-									)}
+							<SkeletonTheme baseColor="#212f4d" highlightColor="#324773">
+								<tr className="border w-full" key={trader.name}>
+									<td className="border w-[90px] h-[115px] text-center">
+										{trader.imageLink ? (
+											<img src={trader.imageLink} alt="trader image" />
+										) : (
+											<Skeleton height={85} />
+										)}
 
-									{trader.name || <Skeleton />}
-								</td>
-								<td className="border p-4 text-left font-light">
-									{trader.description || <Skeleton count={4} />}
-								</td>
-							</tr>
+										{trader.name || <Skeleton />}
+									</td>
+									<td className="border p-4 text-left font-light">
+										{trader.description || <Skeleton count={4} />}
+									</td>
+								</tr>
+							</SkeletonTheme>
 						)
 					)}
 				</tbody>

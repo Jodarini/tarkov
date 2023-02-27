@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, {
+	SkeletonTheme,
+} from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const apiEndPoint = "https://api.tarkov.dev/graphql";
@@ -82,19 +84,21 @@ export default function TarkovItems() {
 							shortName: string;
 							iconLink: string;
 						}) => (
-							<tr className="border p-5 w-full" key={item.id}>
-								<td className="w-14">
-									{item.iconLink ? (
-										<img src={item.iconLink} alt="" />
-									) : (
-										<Skeleton height={40} />
-									)}
-								</td>
-								<td className="p-2 border w-20">
-									{item.shortName || <Skeleton />}
-								</td>
-								<td className="p-2">{item.name || <Skeleton />}</td>
-							</tr>
+							<SkeletonTheme baseColor="#212f4d" highlightColor="#324773">
+								<tr className="border p-5 w-full" key={item.id}>
+									<td className="w-14">
+										{item.iconLink ? (
+											<img src={item.iconLink} alt="" />
+										) : (
+											<Skeleton height={50} />
+										)}
+									</td>
+									<td className="p-2 border w-20">
+										{item.shortName || <Skeleton />}
+									</td>
+									<td className="p-2">{item.name || <Skeleton />}</td>
+								</tr>
+							</SkeletonTheme>
 						)
 					)}
 				</tbody>
