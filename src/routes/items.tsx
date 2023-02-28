@@ -87,16 +87,26 @@ export default function TarkovItems() {
 							<SkeletonTheme baseColor="#212f4d" highlightColor="#324773">
 								<tr className="border p-5 w-full" key={item.id}>
 									<td className="w-14">
-										{item.iconLink ? (
+										{item.iconLink && status === "success" ? (
 											<img src={item.iconLink} alt="" />
 										) : (
 											<Skeleton height={50} />
 										)}
 									</td>
 									<td className="p-2 border w-20">
-										{item.shortName || <Skeleton />}
+										{item.shortName && status === "success" ? (
+											item.shortName
+										) : (
+											<Skeleton />
+										)}
 									</td>
-									<td className="p-2">{item.name || <Skeleton />}</td>
+									<td className="p-2">
+										{item.name && status === "success" ? (
+											item.name
+										) : (
+											<Skeleton />
+										)}
+									</td>
 								</tr>
 							</SkeletonTheme>
 						)
