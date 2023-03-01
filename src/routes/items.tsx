@@ -4,8 +4,11 @@ import Skeleton, {
 	SkeletonTheme,
 } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useNavigate } from "react-router-dom";
 
-const apiEndPoint = "https://api.tarkov.dev/graphql";
+const API_ENDPOINT = "https://api.tarkov.dev/graphql";
+const PAGE_SIZE = 10;
+
 interface Items {
 	id: string;
 	name: string;
@@ -16,10 +19,9 @@ export default function TarkovItems() {
 	const [tarkovItems, setTarkovItems] = useState<
 		Array<Items>
 	>(Array(10).fill(0));
+	const navigate = useNavigate();
 
-	const [page, setPage] = useState(0);
-
-	const itemsPerPage = 10;
+	const [currentPage, setCurrentPage] = useState(1);
 
 	const allItems = `query ($page: Int, $itemsPerPage: Int) {
     	items(limit: $itemsPerPage, offset: $page){
@@ -29,17 +31,18 @@ export default function TarkovItems() {
 			iconLink
 			}
   	}`;
-	const fetchItems = async () => {
-		const response = await fetch(apiEndPoint, {
-			method: "post",
+
+	const fetchItems = async (page: number) => {
+		const response = await fetch(API_ENDPOINT, {
+			method: "POST",
 			headers: {
 				"Content-Type": "applicaton/json",
 			},
 			body: JSON.stringify({
 				query: allItems,
 				variables: {
-					page,
-					itemsPerPage,
+					page: (page - 1) * PAGE_SIZE,
+					itemsPerPage: PAGE_SIZE,
 				},
 			}),
 		});
@@ -48,8 +51,8 @@ export default function TarkovItems() {
 	};
 
 	const { data, status } = useQuery(
-		[allItems, page, itemsPerPage],
-		fetchItems,
+		["items", currentPage],
+		() => fetchItems(currentPage),
 		{
 			onSuccess: data => {
 				setTarkovItems(data.data.items);
@@ -57,12 +60,16 @@ export default function TarkovItems() {
 		}
 	);
 
+	console.log(status);
+
 	const nextPage = () => {
-		setPage(prev => prev + 10);
+		setCurrentPage(prev => prev + 1);
+		navigate(`/items?page=${currentPage + 1}`);
 	};
 
 	const prevPage = () => {
-		setPage(prev => prev - 10);
+		setCurrentPage(prev => prev - 1);
+		navigate(`/items?page=${currentPage - 1}`);
 	};
 
 	return (
