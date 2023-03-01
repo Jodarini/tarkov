@@ -9,7 +9,7 @@ export default function Root() {
 					<nav className="">
 						<ul className="flex flex-row items-center gap-5">
 							<li>
-								<Link to={`/items`}>Items</Link>
+								<Link to={`/items/1`}>Items</Link>
 							</li>
 							<li>
 								<Link to={`/traders`}>Traders</Link>

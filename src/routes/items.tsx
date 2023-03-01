@@ -71,8 +71,6 @@ export default function TarkovItems() {
 		}
 	);
 
-	console.log(status);
-
 	const nextPage = () => {
 		setCurrentPage(prev => prev + 1);
 		navigate(`/items/${currentPage + 1}`);
