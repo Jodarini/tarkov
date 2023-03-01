@@ -5,6 +5,7 @@ import Skeleton, {
 	SkeletonTheme,
 } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useParams } from "react-router-dom";
 
 interface Trader {
 	name: string;
@@ -16,6 +17,7 @@ export default function TarkovTraders() {
 	const [tarkovTraders, setTarkovTraders] = useState<
 		Array<Trader>
 	>(Array(10).fill(0));
+
 
 	const allTraders = `query {
 		traders {
@@ -39,7 +41,7 @@ export default function TarkovTraders() {
 		return data;
 	};
 
-	const { data: traderData, status: traderStatus } = useQuery(
+	const { data, status: traderStatus } = useQuery(
 		[allTraders],
 		fetchTraders,
 		{

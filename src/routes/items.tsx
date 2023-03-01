@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Skeleton, {
 	SkeletonTheme,
 } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const API_ENDPOINT = "https://api.tarkov.dev/graphql";
 const PAGE_SIZE = 10;
@@ -21,6 +21,17 @@ export default function TarkovItems() {
 	>(Array(10).fill(0));
 	const navigate = useNavigate();
 
+	const { page } = useParams();
+
+	useEffect(() => {
+		if (page) {
+			setCurrentPage(parseInt(page, 10));
+		} else {
+			setCurrentPage(1);
+		}
+	}, [page]);
+
+	console.log("current page: ", page);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const allItems = `query ($page: Int, $itemsPerPage: Int) {
@@ -64,12 +75,12 @@ export default function TarkovItems() {
 
 	const nextPage = () => {
 		setCurrentPage(prev => prev + 1);
-		navigate(`/items?page=${currentPage + 1}`);
+		navigate(`/items/${currentPage + 1}`);
 	};
 
 	const prevPage = () => {
 		setCurrentPage(prev => prev - 1);
-		navigate(`/items?page=${currentPage - 1}`);
+		navigate(`/items/${currentPage - 1}`);
 	};
 
 	return (
