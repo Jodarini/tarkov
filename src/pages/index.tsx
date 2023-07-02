@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { UseQueryResult, useQuery } from "react-query";
 
 interface Items {
   data: {
@@ -13,7 +13,7 @@ interface Items {
   };
 }
 export default function Home() {
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data }: UseQueryResult<Items> = useQuery({
     queryKey: ["allItems"],
     queryFn: () =>
       fetch("https://api.tarkov.dev/graphql", {
@@ -38,7 +38,6 @@ export default function Home() {
 
   console.log(data);
 
-  if (isLoading) return "loading...";
   if (error) return "an error ocurred: ";
 
   return (
@@ -61,6 +60,7 @@ export default function Home() {
             >
               <h3 className="text-2xl font-bold">Items</h3>
               <div className="text-lg">
+                {isLoading && "loading..."}
                 {data && (
                   <ul>
                     {data.data.items.map((item) => (
