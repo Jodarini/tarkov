@@ -66,34 +66,44 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Tarkov <span className="text-yellow-500">T3</span> App
           </h1>
-          <div className="">
-            <div className="flex max-w-xs flex-col rounded-xl bg-white/10 p-4 text-white">
-              <h3 className="text-2xl font-bold">Items</h3>
-              <div className="text-lg">
-                {isLoading && "loading..."}
-                {data && (
-                  <ul>
-                    {data.data.items.map((item) => (
-                      <li key={item.id}>{item.shortName}</li>
-                    ))}
-                  </ul>
+          <div className="flex w-11/12 flex-col rounded-xl bg-white/10 p-4 text-white">
+            <h3 className="text-2xl font-bold">Items</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Short name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {isLoading && (
+                  <tr>
+                    <td>loading...</td>
+                  </tr>
                 )}
-              </div>
-            </div>
-            <div className="mt-2 flex justify-between">
-              <button
-                onClick={handlePreviousPage}
-                className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
-              >
-                Previous
-              </button>
-              <button
-                onClick={handleNextPage}
-                className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
-              >
-                Next
-              </button>
-            </div>
+                {data &&
+                  data.data.items.map((item) => (
+                    <tr className="text-lg" key={item.id}>
+                      <td>{item.shortName}</td>
+                      <td>{item.name}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-2 flex justify-between">
+            <button
+              onClick={handlePreviousPage}
+              className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextPage}
+              className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
+            >
+              Next
+            </button>
           </div>
         </div>
       </main>
