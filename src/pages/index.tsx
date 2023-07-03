@@ -13,8 +13,10 @@ interface Items {
   };
 }
 export default function Home() {
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(0);
   const { isLoading, error, data }: UseQueryResult<Items> = useQuery({
-    queryKey: ["allItems"],
+    queryKey: ["allItems", limit, offset],
     queryFn: () =>
       fetch("https://api.tarkov.dev/graphql", {
         method: "POST",
@@ -24,17 +26,29 @@ export default function Home() {
         },
         body: JSON.stringify({
           query: `
-          query allItems{
-            items (limit: 2) {
-              id
-              name
-              shortName
+          query allItems($limit: Int, $offset: Int){
+            items (limit: $limit, offset: $offset ) {
+                  id
+                  name
+                  shortName
             }
           }
         `,
+          variables: {
+            limit: limit,
+            offset: offset,
+          },
         }),
       }).then((res) => res.json()),
   });
+
+  const handleNextPage = () => {
+    setOffset(offset + 10);
+  };
+
+  const handlePreviousPage = () => {
+    setOffset(offset - 10);
+  };
 
   console.log(data);
 
@@ -53,23 +67,33 @@ export default function Home() {
             Tarkov <span className="text-yellow-500">T3</span> App
           </h1>
           <div className="">
-            <Link
-              className="flex max-w-xs flex-col rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
+            <div className="flex max-w-xs flex-col rounded-xl bg-white/10 p-4 text-white">
               <h3 className="text-2xl font-bold">Items</h3>
               <div className="text-lg">
                 {isLoading && "loading..."}
                 {data && (
                   <ul>
                     {data.data.items.map((item) => (
-                      <li key={item.id}>{item.name}</li>
+                      <li key={item.id}>{item.shortName}</li>
                     ))}
                   </ul>
                 )}
               </div>
-            </Link>
+            </div>
+            <div className="mt-2 flex justify-between">
+              <button
+                onClick={handlePreviousPage}
+                className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNextPage}
+                className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </main>
