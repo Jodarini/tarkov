@@ -9,6 +9,10 @@ interface Items {
       id: number;
       name: string;
       shortName: string;
+      sellFor: {
+        source: string;
+        priceRUB: number;
+      }[];
     }[];
   };
 }
@@ -31,6 +35,10 @@ export default function Home() {
                   id
                   name
                   shortName
+                  sellFor  {
+                    priceRUB
+                    source
+                  }
             }
           }
         `,
@@ -66,13 +74,20 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Tarkov <span className="text-yellow-500">T3</span> App
           </h1>
-          <div className="flex w-11/12 flex-col rounded-xl bg-white/10 p-4 text-white">
+          <div className="flex w-full flex-col rounded-xl bg-white/10 p-4 text-white">
             <h3 className="text-2xl font-bold">Items</h3>
-            <table>
+            <table className="border-collapse border border-slate-500">
               <thead>
                 <tr>
-                  <th>Short name</th>
-                  <th>Description</th>
+                  <th className="border-collapse border border-slate-500">
+                    Short name
+                  </th>
+                  <th className="border-collapse border border-slate-500">
+                    Description
+                  </th>
+                  <th className="border-collapse border border-slate-500">
+                    Flea price
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -83,15 +98,30 @@ export default function Home() {
                 )}
                 {data &&
                   data.data.items.map((item) => (
-                    <tr className="text-lg" key={item.id}>
-                      <td>{item.shortName}</td>
-                      <td>{item.name}</td>
+                    <tr
+                      className="border-collapse border border-slate-500 text-lg"
+                      key={item.id}
+                    >
+                      <td className="border-collapse border border-slate-500">
+                        {item.shortName}
+                      </td>
+                      <td className="border-collapse border border-slate-500">
+                        {item.name}
+                      </td>
+                      <td className="border-collapse border border-slate-500">
+                        {item.sellFor.map((cell) => (
+                          <span key={cell.source}>
+                            {cell.source === "fleaMarket" &&
+                              `${cell.priceRUB}` + " ₽"}
+                          </span>
+                        ))}
+                      </td>
                     </tr>
                   ))}
               </tbody>
             </table>
           </div>
-          <div className="mt-2 flex justify-between">
+          <div className="mt-1 flex w-full justify-between">
             <button
               onClick={handlePreviousPage}
               className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
