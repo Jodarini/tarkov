@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
 
 interface Items {
@@ -15,11 +16,13 @@ interface Items {
     }[];
   };
 }
-export default function Home() {
-  const [offset, setOffset] = useState(0);
+export default function Home({}) {
+  const router = useRouter();
+  const currentPage = parseInt(router.query.page as string, 10) || 1;
   const limit = 10;
 
-  const fetchItems = async () => {
+  const fetchItems = async (page: number) => {
+    const offset = (page - 1) * limit;
     const response = await fetch("https://api.tarkov.dev/graphql", {
       method: "POST",
       headers: {
@@ -51,18 +54,28 @@ export default function Home() {
     return response.json();
   };
 
-  const { isLoading, error, data }: UseQueryResult<Items> = useQuery({
-    queryKey: ["allItems", limit, offset],
-    queryFn: fetchItems,
-  });
+  const { isLoading, error, data }: UseQueryResult<Items> = useQuery(
+    ["allItems", currentPage],
+    () => fetchItems(currentPage)
+  );
 
   const handleNextPage = () => {
-    setOffset(offset + 10);
+    const newPage = currentPage + 1;
   };
 
   const handlePreviousPage = () => {
-    setOffset(offset - 10);
+    const newPage = currentPage - 1;
   };
+
+  console.count();
+
+  useEffect(() => {
+    const updateUrl = async (page: number) => {
+      const url = router.pathname + `?page=${page}`;
+      await router.push(url, undefined, { shallow: true });
+    };
+    void updateUrl(currentPage);
+  }, [currentPage]);
 
   if (error) return "an error ocurred: ";
 

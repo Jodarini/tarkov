@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface Traders {
   data: {
@@ -13,6 +14,8 @@ interface Traders {
 }
 
 export default function Traders() {
+  const router = useRouter();
+  console.log(router.asPath);
   const fetchTraders = async () => {
     const response = await fetch("https://api.tarkov.dev/graphql", {
       method: "POST",
