@@ -19,10 +19,18 @@ export default function Layout({ children }: LayoutProps) {
             Tarkov <span className="text-yellow-600">T3</span> App
           </h1>
           <header>
-            <Link href="/">Home</Link>
-            <Link href="/traders">Traders</Link>
+            <nav>
+              <ul className="flex gap-6 font-bold text-slate-200">
+                <li>
+                  <Link href="/">Home</Link>
+                </li>
+                <li>
+                  <Link href="/traders">Traders</Link>
+                </li>
+              </ul>
+            </nav>
           </header>
-          <div className="flex w-full flex-col rounded-xl bg-white/10 p-4 text-white">
+          <div className="flex w-full flex-col rounded-xl bg-slate-800/10 p-4 text-white">
             {children}
           </div>
         </div>

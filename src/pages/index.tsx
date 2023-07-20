@@ -69,19 +69,13 @@ export default function Home() {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">Items</h3>
-      <table className="border-collapse border border-slate-600">
+      <h3 className="mb-4 text-2xl font-bold text-slate-200">Items</h3>
+      <table className="border-collapse text-left">
         <thead>
           <tr>
-            <th className="border-collapse border border-slate-600">
-              Short name
-            </th>
-            <th className="border-collapse border border-slate-600">
-              Description
-            </th>
-            <th className="border-collapse border border-slate-600">
-              Flea price
-            </th>
+            <th className="border-b border-slate-700 p-2">Short name</th>
+            <th className="border-b border-slate-700 p-2">Description</th>
+            <th className="border-b border-slate-700 p-2">Flea price</th>
           </tr>
         </thead>
         <tbody>
@@ -92,17 +86,12 @@ export default function Home() {
           )}
           {data &&
             data.data.items.map((item) => (
-              <tr
-                className="border-collapse border border-slate-600 text-lg"
-                key={item.id}
-              >
-                <td className="border-collapse border border-slate-600">
+              <tr className="border-b text-lg" key={item.id}>
+                <td className="border-b border-slate-700 p-2">
                   {item.shortName}
                 </td>
-                <td className="border-collapse border border-slate-600">
-                  {item.name}
-                </td>
-                <td className="border-collapse border border-slate-600">
+                <td className="border-b border-slate-700 p-2">{item.name}</td>
+                <td className="border-b border-slate-700 p-2">
                   {item.sellFor.map((price) => (
                     <span key={price.source}>
                       {price.source === "fleaMarket" &&

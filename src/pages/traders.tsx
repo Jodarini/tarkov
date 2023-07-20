@@ -42,30 +42,33 @@ export default function Traders() {
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <h2>Traders</h2>
-        <table className="border-collapse border border-slate-600">
-          <tbody>
-            {data?.data.traders.map((trader) => (
-              <tr
-                className="border-collapse border border-slate-600"
-                key={trader.name}
-              >
-                <td>
-                  <Image
-                    width={100}
-                    height={100}
-                    alt={trader.name}
-                    src={trader.imageLink}
-                  />
-                </td>
-                <td>{trader.name}</td>
-                <td>{trader.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </main>
+      <h3 className="mb-4 text-2xl font-bold">Traders</h3>
+      <table className="border-collapse border-slate-600">
+        <thead>
+          <tr className="border-b border-slate-600 p-2">
+            <th colSpan={2} className="p-2">
+              Name
+            </th>
+            <th className="p-2">description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data?.data.traders.map((trader) => (
+            <tr className="border-b border-slate-600" key={trader.name}>
+              <td className="p-2">
+                <Image
+                  width={100}
+                  height={100}
+                  alt={trader.name}
+                  src={trader.imageLink}
+                />
+              </td>
+              <td className="p-2">{trader.name}</td>
+              <td className="p-2">{trader.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
 }
