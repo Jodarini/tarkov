@@ -1,12 +1,15 @@
 import { type AppType } from "next/dist/shared/lib/utils";
-import { QueryClientProvider, QueryClient} from "react-query";
+import { QueryClientProvider, QueryClient } from "react-query";
 import "~/styles/globals.css";
+import Layout from "~/components/Layout";
 
 const queryClient = new QueryClient();
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />;
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </QueryClientProvider>
   );
 };
