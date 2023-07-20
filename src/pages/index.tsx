@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useState } from "react";
 import { UseQueryResult, useQuery } from "react-query";
 
@@ -58,8 +57,6 @@ export default function Home() {
     setOffset(offset - 10);
   };
 
-  console.log(data);
-
   if (error) return "an error ocurred: ";
 
   return (
@@ -74,6 +71,9 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Tarkov <span className="text-yellow-500">T3</span> App
           </h1>
+          <header>
+
+          </header>
           <div className="flex w-full flex-col rounded-xl bg-white/10 p-4 text-white">
             <h3 className="text-2xl font-bold">Items</h3>
             <table className="border-collapse border border-slate-500">
@@ -140,3 +140,11 @@ export default function Home() {
     </>
   );
 }
+
+export const Items = () => {
+  return (
+    <>
+      <h3>hello</h3>
+    </>
+  );
+};
