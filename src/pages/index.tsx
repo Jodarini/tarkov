@@ -72,20 +72,20 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Tarkov <span className="text-yellow-500">T3</span> App
+            Tarkov <span className="text-yellow-600">T3</span> App
           </h1>
           <div className="flex w-full flex-col rounded-xl bg-white/10 p-4 text-white">
             <h3 className="text-2xl font-bold">Items</h3>
-            <table className="border-collapse border border-slate-500">
+            <table className="border-collapse border border-slate-600">
               <thead>
                 <tr>
-                  <th className="border-collapse border border-slate-500">
+                  <th className="border-collapse border border-slate-600">
                     Short name
                   </th>
-                  <th className="border-collapse border border-slate-500">
+                  <th className="border-collapse border border-slate-600">
                     Description
                   </th>
-                  <th className="border-collapse border border-slate-500">
+                  <th className="border-collapse border border-slate-600">
                     Flea price
                   </th>
                 </tr>
@@ -99,20 +99,20 @@ export default function Home() {
                 {data &&
                   data.data.items.map((item) => (
                     <tr
-                      className="border-collapse border border-slate-500 text-lg"
+                      className="border-collapse border border-slate-600 text-lg"
                       key={item.id}
                     >
-                      <td className="border-collapse border border-slate-500">
+                      <td className="border-collapse border border-slate-600">
                         {item.shortName}
                       </td>
-                      <td className="border-collapse border border-slate-500">
+                      <td className="border-collapse border border-slate-600">
                         {item.name}
                       </td>
-                      <td className="border-collapse border border-slate-500">
-                        {item.sellFor.map((cell) => (
-                          <span key={cell.source}>
-                            {cell.source === "fleaMarket" &&
-                              `${cell.priceRUB}` + " ₽"}
+                      <td className="border-collapse border border-slate-600">
+                        {item.sellFor.map((price) => (
+                          <span key={price.source}>
+                            {price.source === "fleaMarket" &&
+                              `${price.priceRUB}` + " ₽"}
                           </span>
                         ))}
                       </td>
