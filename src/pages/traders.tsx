@@ -22,14 +22,14 @@ export default function Traders() {
       },
       body: JSON.stringify({
         query: `
-                query allTraders {
-                    traders{
-                        name
-                        imageLink
-                        description
-                    }
-                }
-                `,
+            query allTraders {
+             traders{
+               name
+               imageLink
+               description
+               }
+             }
+        `,
       }),
     });
     return response.json();
