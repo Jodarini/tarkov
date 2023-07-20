@@ -18,18 +18,17 @@ interface Items {
 export default function Home() {
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
-  const { isLoading, error, data }: UseQueryResult<Items> = useQuery({
-    queryKey: ["allItems", limit, offset],
-    queryFn: () =>
-      fetch("https://api.tarkov.dev/graphql", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          query: `
-          query allItems($limit: Int, $offset: Int){
+
+  const fetchItems = async () => {
+    const response = await fetch("https://api.tarkov.dev/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: `
+        query allItems($limit: Int, $offset: Int){
             items (limit: $limit, offset: $offset ) {
                   id
                   name
@@ -41,12 +40,21 @@ export default function Home() {
             }
           }
         `,
-          variables: {
-            limit: limit,
-            offset: offset,
-          },
-        }),
-      }).then((res) => res.json()),
+        variables: {
+          limit: limit,
+          offset: offset,
+        },
+      }),
+    });
+    if (!response.ok) {
+      throw new Error("An error occurred");
+    }
+    return response.json();
+  };
+
+  const { isLoading, error, data }: UseQueryResult<Items> = useQuery({
+    queryKey: ["allItems", limit, offset],
+    queryFn: fetchItems,
   });
 
   const handleNextPage = () => {
@@ -72,7 +80,7 @@ export default function Home() {
             Tarkov <span className="text-yellow-600">T3</span> App
           </h1>
           <header>
-
+            <Items />
           </header>
           <div className="flex w-full flex-col rounded-xl bg-white/10 p-4 text-white">
             <h3 className="text-2xl font-bold">Items</h3>
