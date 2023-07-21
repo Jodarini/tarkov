@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
@@ -18,8 +18,12 @@ interface Items {
 }
 export default function Home({}) {
   const router = useRouter();
-  const currentPage = parseInt(router.query.page as string, 10) || 1;
   const limit = 10;
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    router.query.page && setPage(Number(router.query.page));
+  }, [router.query.page]);
 
   const fetchItems = async (page: number) => {
     const offset = (page - 1) * limit;
@@ -55,27 +59,35 @@ export default function Home({}) {
   };
 
   const { isLoading, error, data }: UseQueryResult<Items> = useQuery(
-    ["allItems", currentPage],
-    () => fetchItems(currentPage)
+    ["allItems", page],
+    () => fetchItems(page)
   );
 
   const handleNextPage = () => {
-    const newPage = currentPage + 1;
+    setPage((previousPage) => previousPage + 1);
+    router
+      .push({
+        pathname: "",
+        query: { page },
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handlePreviousPage = () => {
-    const newPage = currentPage - 1;
+    setPage((previousPage) => previousPage - 1);
+    router
+      .push({
+        pathname: "",
+        query: { page },
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   console.count();
-
-  useEffect(() => {
-    const updateUrl = async (page: number) => {
-      const url = router.pathname + `?page=${page}`;
-      await router.push(url, undefined, { shallow: true });
-    };
-    void updateUrl(currentPage);
-  }, [currentPage]);
 
   if (error) return "an error ocurred: ";
 
