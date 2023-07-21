@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
@@ -19,7 +19,7 @@ interface Items {
 export default function Home({}) {
   const router = useRouter();
   const limit = 10;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     router.query.page && setPage(Number(router.query.page));
@@ -63,31 +63,37 @@ export default function Home({}) {
     () => fetchItems(page)
   );
 
+  console.count();
+
   const handleNextPage = () => {
-    setPage((previousPage) => previousPage + 1);
-    router
-      .push({
-        pathname: "",
-        query: { page },
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setPage((previousPage: number) => {
+      const page = previousPage + 1;
+      router
+        .push({
+          pathname: "",
+          query: { page },
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      return page;
+    });
   };
 
   const handlePreviousPage = () => {
-    setPage((previousPage) => previousPage - 1);
-    router
-      .push({
-        pathname: "",
-        query: { page },
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setPage((previousPage: number) => {
+      const page = previousPage - 1;
+      router
+        .push({
+          pathname: "",
+          query: { page },
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      return page;
+    });
   };
-
-  console.count();
 
   if (error) return "an error ocurred: ";
 
