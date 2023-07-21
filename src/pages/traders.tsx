@@ -42,6 +42,8 @@ export default function Traders() {
     queryFn: fetchTraders,
   });
 
+  if (error) return "An error ocurred";
+
   return (
     <>
       <h3 className="mb-4 text-2xl font-bold">Traders</h3>
