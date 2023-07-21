@@ -22,7 +22,7 @@ export default function Layout({ children }: LayoutProps) {
             <nav>
               <ul className="flex gap-6 font-bold text-slate-200">
                 <li>
-                  <Link href="/">Home</Link>
+                  <Link href="/?page=1">Home</Link>
                 </li>
                 <li>
                   <Link href="/traders">Traders</Link>
