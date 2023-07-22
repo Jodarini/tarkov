@@ -2,6 +2,7 @@ import { SetStateAction, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
+import Link from "next/link";
 
 interface Items {
   data: {
@@ -117,18 +118,20 @@ export default function Home({}) {
           {data &&
             data.data.items.map((item) => (
               <tr className="border-b text-lg" key={item.id}>
-                <td className="border-b border-slate-700 p-2">
-                  {item.shortName}
-                </td>
-                <td className="border-b border-slate-700 p-2">{item.name}</td>
-                <td className="border-b border-slate-700 p-2">
-                  {item.sellFor.map((price) => (
-                    <span key={price.source}>
-                      {price.source === "fleaMarket" &&
-                        `${price.priceRUB}` + " ₽"}
-                    </span>
-                  ))}
-                </td>
+                <Link href={`/items/${item.id}`}>
+                  <td className="border-b border-slate-700 p-2">
+                    {item.shortName}
+                  </td>
+                  <td className="border-b border-slate-700 p-2">{item.name}</td>
+                  <td className="border-b border-slate-700 p-2">
+                    {item.sellFor.map((price) => (
+                      <span key={price.source}>
+                        {price.source === "fleaMarket" &&
+                          `${price.priceRUB}` + " ₽"}
+                      </span>
+                    ))}
+                  </td>
+                </Link>
               </tr>
             ))}
         </tbody>
