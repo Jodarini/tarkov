@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { UseQueryResult, useQuery } from "react-query";
+import Image from "next/image";
 
 interface Item {
   data: {
@@ -58,15 +59,24 @@ const Items = () => {
     () => fetchItem(item)
   );
 
-  console.log(Object.entries(data?.data.item));
+  const finalItem = data?.data.item;
+  console.log(finalItem);
 
   return (
     <>
       <h1>Items</h1>
-      <p>item: {router.query.id}</p>
+      <p>item (url): {router.query.id}</p>
       {data &&
-        Object.entries(data.data.item).map((item) => (
-          <p key={item.id}>{item.name}</p>
+        Object.entries(finalItem).map(([key, value]) => (
+          <>
+            <div className="flex gap-2">
+              <Image width={200} height={200} alt="akjldsf" src={key[]} />
+              <div>
+                <p className="font-bold">{key}: </p>
+                <p>{value}</p>
+              </div>
+            </div>
+          </>
         ))}
     </>
   );
