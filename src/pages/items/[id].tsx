@@ -11,7 +11,7 @@ interface Item {
       name: string;
       shortName: string;
       description: string;
-      fleaMaketFee: number;
+      fleaMarketFee: number;
       image512pxLink: string;
       wikiLink: string;
     };
@@ -19,7 +19,7 @@ interface Item {
 }
 
 const GET_ITEMS = gql`
-  query getItem($itemId: ID!) {
+  query ($itemId: ID!) {
     item(id: $itemId) {
       id
       name
@@ -60,33 +60,35 @@ const Items = () => {
     () => fetchItem(item)
   );
 
-  const finalItem = data?.data.item;
-  console.log(finalItem);
+  const itemById = data?.data.item;
+  console.log(itemById?.fleaMarketFee);
 
   return (
     <>
-      <h1>Items</h1>
+      <h3 className="mb-4 text-2xl font-bold text-slate-200">
+        {itemById?.name}
+      </h3>
       <div className="flex gap-4">
-        {finalItem && (
+        {itemById && (
           <Image
-            src={finalItem.image512pxLink}
+            src={itemById.image512pxLink}
             width={100}
             height={100}
-            alt={finalItem.name}
+            alt={itemById.name}
           />
         )}
         <div>
           <p>
-            <strong>Name: </strong>
-            {finalItem?.name}
+            <strong>Short name: </strong>
+            {itemById?.shortName}
           </p>
           <p>
             <strong>Description: </strong>
-            {finalItem?.description}
+            {itemById?.description}
           </p>
           <p>
             <strong>Fleamarket fee: </strong>
-            {finalItem?.fleaMaketFee}
+            {itemById?.fleaMarketFee}
           </p>
           {/* <Link href={finalItem?.wikiLink}>
             <strong>More info: </strong>
