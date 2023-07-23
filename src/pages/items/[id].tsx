@@ -90,10 +90,6 @@ const Items = () => {
             <strong>Fleamarket fee: </strong>
             {itemById?.fleaMarketFee}
           </p>
-          {/* <Link href={finalItem?.wikiLink}>
-            <strong>More info: </strong>
-            {finalItem?.wikiLink}
-          </Link> */}
         </div>
       </div>
     </>

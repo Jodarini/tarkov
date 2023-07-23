@@ -1,5 +1,6 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
 import Link from "next/link";
@@ -10,6 +11,7 @@ interface Items {
       id: number;
       name: string;
       shortName: string;
+      description: string;
       sellFor: {
         source: string;
         priceRUB: number;
@@ -39,6 +41,7 @@ export default function Home({}) {
             items (limit: $limit, offset: $offset ) {
               id
               name
+              description
               shortName
               sellFor  {
                 priceRUB
@@ -118,20 +121,20 @@ export default function Home({}) {
           {data &&
             data.data.items.map((item) => (
               <tr className="border-b text-lg" key={item.id}>
-                <Link href={`/items/${item.id}`}>
-                  <td className="border-b border-slate-700 p-2">
+                <td className="border-b border-slate-700 p-2">
+                  <Link href={`/items/${item.id}`} className="block">
                     {item.shortName}
-                  </td>
-                  <td className="border-b border-slate-700 p-2">{item.name}</td>
-                  <td className="border-b border-slate-700 p-2">
-                    {item.sellFor.map((price) => (
-                      <span key={price.source}>
-                        {price.source === "fleaMarket" &&
-                          `${price.priceRUB}` + " ₽"}
-                      </span>
-                    ))}
-                  </td>
-                </Link>
+                  </Link>
+                </td>
+                <td className="border-b border-slate-700 p-2">{item.name}</td>
+                <td className="border-b border-slate-700 p-2">
+                  {item.sellFor.map((price) => (
+                    <span key={price.source}>
+                      {price.source === "fleaMarket" &&
+                        `${price.priceRUB}` + " ₽"}
+                    </span>
+                  ))}
+                </td>
               </tr>
             ))}
         </tbody>
