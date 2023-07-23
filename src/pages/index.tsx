@@ -35,7 +35,7 @@ export default function Home({}) {
       },
       body: JSON.stringify({
         query: `
-        query allItems($limit: Int, $offset: Int){
+        query ($limit: Int, $offset: Int){
             items (limit: $limit, offset: $offset ) {
               id
               name

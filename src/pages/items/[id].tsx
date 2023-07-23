@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
-import { UseQueryResult, useQuery } from "react-query";
+import { useQuery } from "react-query";
+import type { UseQueryResult } from "react-query";
 import Image from "next/image";
-
+import Link from "next/link";
+import { gql } from "graphql-request";
 interface Item {
   data: {
     item: {
@@ -9,12 +11,26 @@ interface Item {
       name: string;
       shortName: string;
       description: string;
-      fleaMakerFee: number;
-      gridImageLink: string;
+      fleaMaketFee: number;
+      image512pxLink: string;
       wikiLink: string;
     };
   };
 }
+
+const GET_ITEMS = gql`
+  query getItem($itemId: String!) {
+    item(id: $itemId) {
+      id
+      name
+      shortName
+      description
+      fleaMarketFee
+      image512pxLink
+      wikiLink
+    }
+  }
+`;
 
 const Items = () => {
   const router = useRouter();
@@ -27,23 +43,8 @@ const Items = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query: `
-        query {
-          item(id: "5447a9cd4bdc2dbd208b4567"){
-            id
-            name 
-            shortName
-            description
-            fleaMarketFee
-		        gridImageLink    
-            baseImageLink
-            wikiLink
-          }
-        } 
-        `,
-        variables: {
-          item: item,
-        },
+        query: GET_ITEMS,
+        variables: { itemId: item },
       }),
     });
 
@@ -55,7 +56,7 @@ const Items = () => {
   };
 
   const { isLoading, error, data }: UseQueryResult<Item> = useQuery(
-    ["item", item],
+    ["getItem", item],
     () => fetchItem(item)
   );
 
@@ -65,19 +66,34 @@ const Items = () => {
   return (
     <>
       <h1>Items</h1>
-      <p>item (url): {router.query.id}</p>
-      {data &&
-        Object.entries(finalItem).map(([key, value]) => (
-          <>
-            <div className="flex gap-2">
-              <Image width={200} height={200} alt="akjldsf" src={key[]} />
-              <div>
-                <p className="font-bold">{key}: </p>
-                <p>{value}</p>
-              </div>
-            </div>
-          </>
-        ))}
+      <div className="flex gap-4">
+        {finalItem && (
+          <Image
+            src={finalItem.image512pxLink}
+            width={100}
+            height={100}
+            alt={finalItem.name}
+          />
+        )}
+        <div>
+          <p>
+            <strong>Name: </strong>
+            {finalItem?.name}
+          </p>
+          <p>
+            <strong>Description: </strong>
+            {finalItem?.description}
+          </p>
+          <p>
+            <strong>Fleamarket fee: </strong>
+            {finalItem?.fleaMaketFee}
+          </p>
+          {/* <Link href={finalItem?.wikiLink}>
+            <strong>More info: </strong>
+            {finalItem?.wikiLink}
+          </Link> */}
+        </div>
+      </div>
     </>
   );
 };
