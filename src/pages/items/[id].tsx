@@ -19,7 +19,7 @@ interface Item {
 }
 
 const GET_ITEMS = gql`
-  query getItem($itemId: String!) {
+  query getItem($itemId: ID!) {
     item(id: $itemId) {
       id
       name
