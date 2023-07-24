@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
 import Image from "next/image";
-import Link from "next/link";
 import { gql } from "graphql-request";
 interface Item {
   data: {
@@ -57,11 +56,10 @@ const Items = () => {
 
   const { isLoading, error, data }: UseQueryResult<Item> = useQuery(
     ["getItem", item],
-    () => fetchItem(item)
+    () => fetchItem(item as string)
   );
 
   const itemById = data?.data.item;
-  console.log(itemById?.fleaMarketFee);
 
   return (
     <>
@@ -69,6 +67,7 @@ const Items = () => {
         {itemById?.name}
       </h3>
       <div className="flex gap-4">
+        {isLoading && <>Loading...</>}
         {itemById && (
           <Image
             src={itemById.image512pxLink}
@@ -80,14 +79,17 @@ const Items = () => {
         <div>
           <p>
             <strong>Short name: </strong>
+            {isLoading && <>Loading...</>}
             {itemById?.shortName}
           </p>
           <p>
             <strong>Description: </strong>
+            {isLoading && <>Loading...</>}
             {itemById?.description}
           </p>
           <p>
             <strong>Fleamarket fee: </strong>
+            {isLoading && <>Loading...</>}
             {itemById?.fleaMarketFee}
           </p>
         </div>

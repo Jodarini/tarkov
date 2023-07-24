@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
 import Link from "next/link";
+import { headers } from "next/dist/client/components/headers";
 
 interface Items {
   data: {
@@ -19,6 +20,7 @@ interface Items {
     }[];
   };
 }
+
 export default function Home({}) {
   const router = useRouter();
   const limit = 10;
@@ -66,8 +68,6 @@ export default function Home({}) {
     ["allItems", page],
     () => fetchItems(page)
   );
-
-  console.count();
 
   const handleNextPage = () => {
     setPage((previousPage: number) => {
@@ -157,3 +157,12 @@ export default function Home({}) {
     </>
   );
 }
+
+const Items = () => {
+  return (
+    <>
+      <h3> Items</h3>
+      <p>asdasd</p>
+    </>
+  );
+};
