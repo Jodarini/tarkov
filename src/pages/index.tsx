@@ -120,19 +120,35 @@ export default function Home({}) {
           )}
           {data &&
             data.data.items.map((item) => (
-              <tr className="border-b text-lg" key={item.id}>
+              <tr
+                className="border-b text-lg hover:bg-slate-900/50"
+                key={item.id}
+              >
                 <td className="border-b border-slate-700 p-2">
                   <Link href={`/items/${item.id}`} className="block">
                     {item.shortName}
                   </Link>
                 </td>
-                <td className="border-b border-slate-700 p-2">{item.name}</td>
                 <td className="border-b border-slate-700 p-2">
+                  <Link href={`/items/${item.id}`} className="block">
+                    {item.name}
+                  </Link>
+                </td>
+                <td className="border-b border-slate-700 p-2">
+                  {item.sellFor.length === 0 && "n/a"}
                   {item.sellFor.map((price) => (
-                    <span key={price.source}>
-                      {price.source === "fleaMarket" &&
-                        `${price.priceRUB}` + " ₽"}
-                    </span>
+                    <Link
+                      key={price.source}
+                      href={`/items/${item.id}`}
+                      className="block"
+                    >
+                      <span>
+                        {!price && "n/a"}
+                        {price.source === "" && "n/a"}
+                        {price.source === "fleaMarket" &&
+                          `${price.priceRUB}` + " ₽"}
+                      </span>
+                    </Link>
                   ))}
                 </td>
               </tr>
@@ -143,13 +159,13 @@ export default function Home({}) {
       <div className="mt-1 flex w-full justify-between">
         <button
           onClick={handlePreviousPage}
-          className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
+          className="min-w-[80px] rounded-md  bg-slate-900/50 p-2 text-white"
         >
           Previous
         </button>
         <button
           onClick={handleNextPage}
-          className="min-w-[80px] rounded-md bg-white/10 p-2 text-white"
+          className="min-w-[80px] rounded-md bg-slate-900/50 p-2 text-white"
         >
           Next
         </button>

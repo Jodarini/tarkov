@@ -66,12 +66,13 @@ const Items = () => {
       <h3 className="mb-4 text-2xl font-bold text-slate-200">
         {itemById?.name}
       </h3>
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 md:flex-row">
         {isLoading && <>Loading...</>}
         {itemById && (
           <Image
             src={itemById.image512pxLink}
             width={100}
+            className="max-h-[100px] max-w-[100px]"
             height={100}
             alt={itemById.name}
           />
