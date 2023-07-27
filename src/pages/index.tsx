@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { NextRouter, Router, useRouter } from "next/router";
-import type { UseQueryResult } from "react-query";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { gql } from "graphql-request";
 import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
+import type { UseQueryResult } from "react-query";
+import Image from "next/image";
 
 interface Items {
   data: {
@@ -13,6 +14,7 @@ interface Items {
       name: string;
       shortName: string;
       description: string;
+      baseImageLink: string;
       sellFor: {
         source: string;
         priceRUB: number;
@@ -26,8 +28,9 @@ const GET_ITEMS = gql`
     items(limit: $limit, offset: $offset) {
       id
       name
-      description
       shortName
+      description
+      baseImageLink
       sellFor {
         priceRUB
         source
@@ -108,34 +111,36 @@ const Items = () => {
           {data &&
             data.data.items.map((item) => (
               <tr
-                className="border-b text-lg hover:bg-slate-900/50"
+                className="cursor-pointer border-b text-lg hover:bg-slate-900/50"
                 key={item.id}
+                role="link"
+                data-href={`/items/${item.id}`}
+                onClick={() => {
+                  router.push(`/items/${item.id}`);
+                }}
               >
                 <td className="border-b border-slate-700 p-2">
-                  <Link href={`/items/${item.id}`} className="block">
+                  <div className="flex place-items-center gap-2">
+                    <Image
+                      src={item.baseImageLink}
+                      width={50}
+                      className="max-h-[100px] max-w-[100px]"
+                      height={50}
+                      alt={`${item.shortName}' grid image'`}
+                    />
                     {item.shortName}
-                  </Link>
+                  </div>
                 </td>
-                <td className="border-b border-slate-700 p-2">
-                  <Link href={`/items/${item.id}`} className="block">
-                    {item.name}
-                  </Link>
-                </td>
+                <td className="border-b border-slate-700 p-2">{item.name}</td>
                 <td className="border-b border-slate-700 p-2">
                   {item.sellFor.length === 0 && "n/a"}
                   {item.sellFor.map((price) => (
-                    <Link
-                      key={price.source}
-                      href={`/items/${item.id}`}
-                      className="block"
-                    >
-                      <span>
-                        {!price && "n/a"}
-                        {price.source === "" && "n/a"}
-                        {price.source === "fleaMarket" &&
-                          `${price.priceRUB}` + " ₽"}
-                      </span>
-                    </Link>
+                    <span key={price.source}>
+                      {!price && "n/a"}
+                      {price.source === "" && "n/a"}
+                      {price.source === "fleaMarket" &&
+                        `${price.priceRUB}` + " ₽"}
+                    </span>
                   ))}
                 </td>
               </tr>

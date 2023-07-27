@@ -7,14 +7,11 @@ const useNextAndPreviousPage = (router: NextRouter, page: number) => {
   const handleNextPage = () => {
     setCurrentPage((previousPage: number) => {
       const page = previousPage + 1;
-      router
-        .push({
-          pathname: "",
-          query: { page },
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      void router.push({
+        pathname: "",
+        query: { page },
+      });
+
       return page;
     });
   };
@@ -22,14 +19,10 @@ const useNextAndPreviousPage = (router: NextRouter, page: number) => {
   const handlePreviousPage = () => {
     setCurrentPage((previousPage: number) => {
       const page = previousPage - 1;
-      router
-        .push({
-          pathname: "",
-          query: { page },
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      void router.push({
+        pathname: "",
+        query: { page },
+      });
       return page;
     });
   };
