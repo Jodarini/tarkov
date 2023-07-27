@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
 import Link from "next/link";
-import { headers } from "next/dist/client/components/headers";
+import { gql } from "graphql-request";
 
 interface Items {
   data: {
@@ -21,7 +20,32 @@ interface Items {
   };
 }
 
+const GET_ITEMS = gql`
+  query ($limit: Int, $offset: Int) {
+    items(limit: $limit, offset: $offset) {
+      id
+      name
+      description
+      shortName
+      sellFor {
+        priceRUB
+        source
+      }
+    }
+  }
+`;
+
 export default function Home({}) {
+  return (
+    <>
+      <Items />
+    </>
+  );
+}
+
+const useHandle = () => {};
+
+const Items = () => {
   const router = useRouter();
   const limit = 10;
   const [page, setPage] = useState<number>(1);
@@ -38,29 +62,18 @@ export default function Home({}) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query: `
-        query ($limit: Int, $offset: Int){
-            items (limit: $limit, offset: $offset ) {
-              id
-              name
-              description
-              shortName
-              sellFor  {
-                priceRUB
-                source
-              }
-            }
-          }
-        `,
+        query: GET_ITEMS,
         variables: {
           limit: limit,
           offset: offset,
         },
       }),
     });
+
     if (!response.ok) {
       throw new Error("An error occurred");
     }
+
     return response.json();
   };
 
@@ -170,15 +183,6 @@ export default function Home({}) {
           Next
         </button>
       </div>
-    </>
-  );
-}
-
-const Items = () => {
-  return (
-    <>
-      <h3> Items</h3>
-      <p>asdasd</p>
     </>
   );
 };

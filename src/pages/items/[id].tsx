@@ -17,7 +17,7 @@ interface Item {
   };
 }
 
-const GET_ITEMS = gql`
+const GET_ITEM = gql`
   query ($itemId: ID!) {
     item(id: $itemId) {
       id
@@ -42,7 +42,7 @@ const Items = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query: GET_ITEMS,
+        query: GET_ITEM,
         variables: { itemId: item },
       }),
     });
