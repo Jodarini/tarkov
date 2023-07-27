@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useRouter } from "next/router";
+import { NextRouter, Router, useRouter } from "next/router";
 import type { UseQueryResult } from "react-query";
 import Link from "next/link";
 import { gql } from "graphql-request";
+import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
 
 interface Items {
   data: {
@@ -43,12 +44,15 @@ export default function Home({}) {
   );
 }
 
-const useHandle = () => {};
-
 const Items = () => {
   const router = useRouter();
   const limit = 10;
   const [page, setPage] = useState<number>(1);
+
+  const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
+    router,
+    page
+  );
 
   useEffect(() => {
     router.query.page && setPage(Number(router.query.page));
@@ -81,36 +85,6 @@ const Items = () => {
     ["allItems", page],
     () => fetchItems(page)
   );
-
-  const handleNextPage = () => {
-    setPage((previousPage: number) => {
-      const page = previousPage + 1;
-      router
-        .push({
-          pathname: "",
-          query: { page },
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      return page;
-    });
-  };
-
-  const handlePreviousPage = () => {
-    setPage((previousPage: number) => {
-      const page = previousPage - 1;
-      router
-        .push({
-          pathname: "",
-          query: { page },
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      return page;
-    });
-  };
 
   if (error) return "an error ocurred: ";
 
