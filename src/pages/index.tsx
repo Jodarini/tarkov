@@ -116,7 +116,7 @@ const Items = () => {
                 role="link"
                 data-href={`/items/${item.id}`}
                 onClick={() => {
-                  router.push(`/items/${item.id}`);
+                  void router.push(`/items/${item.id}`);
                 }}
               >
                 <td className="border-b border-slate-700 p-2">
