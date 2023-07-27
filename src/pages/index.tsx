@@ -47,7 +47,7 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState(1);
 
   const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
     router,
