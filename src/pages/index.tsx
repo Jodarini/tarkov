@@ -4,7 +4,6 @@ import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
 
 import { useRouter } from "next/router";
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 import { gql } from "graphql-request";
@@ -28,8 +27,8 @@ interface Items {
 }
 
 const GET_ITEMS = gql`
-  query ($limit: Int, $offset: Int) {
-    items(limit: $limit, offset: $offset) {
+  query ($limit: Int, $offset: Int, $name: [String]) {
+    items(limit: $limit, offset: $offset, names: $name) {
       id
       name
       shortName
@@ -64,7 +63,7 @@ const Items = () => {
   const router = useRouter();
   const limit = 10;
   const [page, setPage] = useState(1);
-  const [searchParams, setSearchParams] = useState("");
+  const [searchParams, setSearchParams] = useState<string>();
 
   const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
     router,
@@ -75,30 +74,30 @@ const Items = () => {
     router.query.page && setPage(Number(router.query.page));
   }, [router.query.page]);
 
-  const { isLoading2, error2, data2 }: UseQueryResult<Items> = useQuery(
-    ["item", searchParams],
-    () => fetchItem(searchParams)
-  );
+  // const { isLoading2, error2, data2 }: UseQueryResult<Items> = useQuery(
+  //   ["item", searchParams],
+  //   () => fetchItem(searchParams)
+  // );
   useEffect(() => {
     
   }, [router.query.search]);
 
-  const fetchItem = async (itemName: string) => {
-    const response = await fetch("https://api.tarkov.dev/graphql", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        query: SEARCH_ITEM,
-        variables: {
-          name: itemName,
-        },
-      }),
-    });
+  // const fetchItem = async (itemName: string) => {
+  //   const response = await fetch("https://api.tarkov.dev/graphql", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       query: SEARCH_ITEM,
+  //       variables: {
+  //         name: itemName,
+  //       },
+  //     }),
+  //   });
 
-    return response.json();
-  };
+  //   return response.json();
+  // };
 
   const fetchItems = async (page: number) => {
     const offset = (page - 1) * limit;
@@ -112,6 +111,7 @@ const Items = () => {
         variables: {
           limit: limit,
           offset: offset,
+          name: searchParams,
         },
       }),
     });
@@ -127,8 +127,6 @@ const Items = () => {
     ["allItems", page],
     () => fetchItems(page)
   );
-
-  const searchParam = useSearchParams();
 
   const handleSearch = (e: ReactEventHandler) => {
     setSearchParams((prev) => (prev = e.target.value));
