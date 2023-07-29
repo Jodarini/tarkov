@@ -8,7 +8,6 @@ const useNextAndPreviousPage = (router: NextRouter, page: number) => {
     setCurrentPage((previousPage: number) => {
       const page = previousPage + 1;
       void router.push({
-        pathname: "",
         query: { page },
       });
 
@@ -20,7 +19,6 @@ const useNextAndPreviousPage = (router: NextRouter, page: number) => {
     setCurrentPage((previousPage: number) => {
       const page = previousPage - 1;
       void router.push({
-        pathname: "",
         query: { page },
       });
       return page;

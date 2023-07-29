@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { ReactEventHandler, useEffect, useState } from "react";
+
 import { useQuery } from "react-query";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { gql } from "graphql-request";
-import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
 import type { UseQueryResult } from "react-query";
+
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+
+import { gql } from "graphql-request";
+
+import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
 
 interface Items {
   data: {
@@ -39,6 +43,15 @@ const GET_ITEMS = gql`
   }
 `;
 
+const SEARCH_ITEM = gql`
+  query ($name: String) {
+    items(names: $name) {
+      id
+      shortName
+    }
+  }
+`;
+
 export default function Home({}) {
   return (
     <>
@@ -51,6 +64,7 @@ const Items = () => {
   const router = useRouter();
   const limit = 10;
   const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useState("");
 
   const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
     router,
@@ -60,6 +74,31 @@ const Items = () => {
   useEffect(() => {
     router.query.page && setPage(Number(router.query.page));
   }, [router.query.page]);
+
+  const { isLoading2, error2, data2 }: UseQueryResult<Items> = useQuery(
+    ["item", searchParams],
+    () => fetchItem(searchParams)
+  );
+  useEffect(() => {
+    
+  }, [router.query.search]);
+
+  const fetchItem = async (itemName: string) => {
+    const response = await fetch("https://api.tarkov.dev/graphql", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        query: SEARCH_ITEM,
+        variables: {
+          name: itemName,
+        },
+      }),
+    });
+
+    return response.json();
+  };
 
   const fetchItems = async (page: number) => {
     const offset = (page - 1) * limit;
@@ -89,11 +128,28 @@ const Items = () => {
     () => fetchItems(page)
   );
 
+  const searchParam = useSearchParams();
+
+  const handleSearch = (e: ReactEventHandler) => {
+    setSearchParams((prev) => (prev = e.target.value));
+    // window.history.replaceState("", "", `?search=${searchParams}`);
+    void router.push({ query: { search: searchParams } });
+  };
+
   if (error) return "an error ocurred: ";
 
   return (
     <>
       <h3 className="mb-4 text-2xl font-bold text-slate-200">Items</h3>
+      <form>
+        <input
+          type="text"
+          placeholder="search..."
+          value={searchParams}
+          className="text-slate-800"
+          onChange={handleSearch}
+        />
+      </form>
       <table className="border-collapse text-left">
         <thead>
           <tr>
@@ -114,7 +170,6 @@ const Items = () => {
                 className="cursor-pointer border-b text-lg hover:bg-slate-900/50"
                 key={item.id}
                 role="link"
-                data-href={`/items/${item.id}`}
                 onClick={() => {
                   void router.push(`/items/${item.id}`);
                 }}
