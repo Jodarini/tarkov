@@ -1,4 +1,4 @@
-import { ReactEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, ReactEventHandler, useEffect, useState } from "react";
 
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
@@ -42,15 +42,6 @@ const GET_ITEMS = gql`
   }
 `;
 
-const SEARCH_ITEM = gql`
-  query ($name: String) {
-    items(names: $name) {
-      id
-      shortName
-    }
-  }
-`;
-
 export default function Home({}) {
   return (
     <>
@@ -74,30 +65,7 @@ const Items = () => {
     router.query.page && setPage(Number(router.query.page));
   }, [router.query.page]);
 
-  // const { isLoading2, error2, data2 }: UseQueryResult<Items> = useQuery(
-  //   ["item", searchParams],
-  //   () => fetchItem(searchParams)
-  // );
-  useEffect(() => {
-    
-  }, [router.query.search]);
-
-  // const fetchItem = async (itemName: string) => {
-  //   const response = await fetch("https://api.tarkov.dev/graphql", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       query: SEARCH_ITEM,
-  //       variables: {
-  //         name: itemName,
-  //       },
-  //     }),
-  //   });
-
-  //   return response.json();
-  // };
+  console.log({ searchParams });
 
   const fetchItems = async (page: number) => {
     const offset = (page - 1) * limit;
@@ -120,18 +88,35 @@ const Items = () => {
       throw new Error("An error occurred");
     }
 
+    console.log("fetching items");
+
     return response.json();
   };
 
-  const { isLoading, error, data }: UseQueryResult<Items> = useQuery(
+  const { isLoading, error, data, refetch }: UseQueryResult<Items> = useQuery(
     ["allItems", page],
     () => fetchItems(page)
   );
+  useEffect(() => {
+    const updateURLParams = async () => {
+      try {
+        await router.push({ query: { search: searchParams } });
+        await refetch();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    console.count();
+    void updateURLParams();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
-  const handleSearch = (e: ReactEventHandler) => {
-    setSearchParams((prev) => (prev = e.target.value));
-    // window.history.replaceState("", "", `?search=${searchParams}`);
-    void router.push({ query: { search: searchParams } });
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    let value: string | undefined = e.target.value;
+    console.log({ value });
+    if (value.length < 1) value = undefined;
+    setSearchParams(value);
   };
 
   if (error) return "an error ocurred: ";
@@ -143,7 +128,7 @@ const Items = () => {
         <input
           type="text"
           placeholder="search..."
-          value={searchParams}
+          value={searchParams || ""}
           className="text-slate-800"
           onChange={handleSearch}
         />
@@ -162,7 +147,8 @@ const Items = () => {
               <td>loading...</td>
             </tr>
           )}
-          {data &&
+          {(data &&
+            data.data !== null &&
             data.data.items.map((item) => (
               <tr
                 className="cursor-pointer border-b text-lg hover:bg-slate-900/50"
@@ -197,7 +183,11 @@ const Items = () => {
                   ))}
                 </td>
               </tr>
-            ))}
+            ))) || (
+            <tr>
+              <td>no data found</td>
+            </tr>
+          )}
         </tbody>
       </table>
 
