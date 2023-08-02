@@ -1,4 +1,5 @@
-import { ChangeEvent, ReactEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
@@ -65,8 +66,6 @@ const Items = () => {
     router.query.page && setPage(Number(router.query.page));
   }, [router.query.page]);
 
-  console.log({ searchParams });
-
   const fetchItems = async (page: number) => {
     const offset = (page - 1) * limit;
     const response = await fetch("https://api.tarkov.dev/graphql", {
@@ -88,8 +87,6 @@ const Items = () => {
       throw new Error("An error occurred");
     }
 
-    console.log("fetching items");
-
     return response.json();
   };
 
@@ -97,24 +94,23 @@ const Items = () => {
     ["allItems", page],
     () => fetchItems(page)
   );
+
+  const updateURLParams = async () => {
+    try {
+      // await router.push({ query: { search: searchParams } });
+      await refetch();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    const updateURLParams = async () => {
-      try {
-        await router.push({ query: { search: searchParams } });
-        await refetch();
-        console.log(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    console.count();
     void updateURLParams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     let value: string | undefined = e.target.value;
-    console.log({ value });
     if (value.length < 1) value = undefined;
     setSearchParams(value);
   };
