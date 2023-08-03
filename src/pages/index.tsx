@@ -106,8 +106,8 @@ const Items = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  const debounceSearch = debounce((fn) => {
-    fn();
+  const debounceSearch = debounce((fn: () => Promise<void>) => {
+    void fn();
   }, 1500);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
