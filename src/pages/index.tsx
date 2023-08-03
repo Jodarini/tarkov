@@ -102,13 +102,9 @@ const Items = () => {
   console.count();
 
   useEffect(() => {
-    debounceSearch(updateURLParams);
+    void updateURLParams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-
-  const debounceSearch = debounce((fn: () => Promise<void>) => {
-    void fn();
-  }, 1500);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     let value: string | undefined = e.target.value;
@@ -116,9 +112,10 @@ const Items = () => {
     setSearchParams(value);
   };
 
+  const handleDebounceSearch = debounce(handleSearch, 800);
+
   const updateURLParams = async () => {
     try {
-      // await router.push({ query: { search: searchParams } });
       await refetch();
     } catch (error) {
       console.error(error);
@@ -136,9 +133,8 @@ const Items = () => {
         <input
           type="text"
           placeholder="Search items..."
-          value={searchParams || ""}
           className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
-          onChange={handleSearch}
+          onChange={handleDebounceSearch}
         />
       </form>
       <table className="border-collapse text-left">
