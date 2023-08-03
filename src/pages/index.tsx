@@ -11,6 +11,8 @@ import { gql } from "graphql-request";
 
 import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
 
+import { debounce } from "lodash";
+
 interface Items {
   data: {
     items: {
@@ -87,6 +89,8 @@ const Items = () => {
       throw new Error("An error occurred");
     }
 
+    console.log("fetching...");
+    console.log("done...");
     return response.json();
   };
 
@@ -95,6 +99,23 @@ const Items = () => {
     () => fetchItems(page)
   );
 
+  console.count();
+
+  useEffect(() => {
+    debounceSearch(updateURLParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  const debounceSearch = debounce((fn) => {
+    fn();
+  }, 1500);
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    let value: string | undefined = e.target.value;
+    if (value.length < 1) value = undefined;
+    setSearchParams(value);
+  };
+
   const updateURLParams = async () => {
     try {
       // await router.push({ query: { search: searchParams } });
@@ -102,17 +123,6 @@ const Items = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  useEffect(() => {
-    void updateURLParams();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    let value: string | undefined = e.target.value;
-    if (value.length < 1) value = undefined;
-    setSearchParams(value);
   };
 
   if (error) return "an error ocurred: ";
@@ -151,7 +161,7 @@ const Items = () => {
               <td>loading...</td>
             </tr>
           )}
-          {(data &&
+          {data &&
             data.data !== null &&
             data.data.items.map((item) => (
               <tr
@@ -167,8 +177,8 @@ const Items = () => {
                     <Image
                       src={item.baseImageLink}
                       width={50}
-                      className="max-h-[100px] max-w-[100px]"
                       height={50}
+                      className="max-h-[100px] max-w-[100px]"
                       alt={`${item.shortName}' grid image'`}
                     />
                     {item.shortName}
@@ -189,9 +199,10 @@ const Items = () => {
                   ))}
                 </td>
               </tr>
-            ))) || (
+            ))}
+          {data?.data.items.length === 0 && (
             <tr>
-              <td>no data found</td>
+              <td>no items found</td>
             </tr>
           )}
         </tbody>
