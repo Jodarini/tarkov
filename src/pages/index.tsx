@@ -119,22 +119,30 @@ const Items = () => {
 
   return (
     <>
-      <h3 className="mb-4 text-2xl font-bold text-slate-200">Items</h3>
+      <div className="mb-4 flex flex-row items-center gap-4">
+        <h3 className="text-2xl font-bold text-slate-200/90">Items</h3>
+      </div>
       <form>
         <input
           type="text"
-          placeholder="search..."
+          placeholder="Search items..."
           value={searchParams || ""}
-          className="text-slate-800"
+          className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
           onChange={handleSearch}
         />
       </form>
       <table className="border-collapse text-left">
         <thead>
           <tr>
-            <th className="border-b border-slate-700 p-2">Short name</th>
-            <th className="border-b border-slate-700 p-2">Description</th>
-            <th className="border-b border-slate-700 p-2">Flea price</th>
+            <th className="border-b border-slate-700 p-2 text-slate-200/90">
+              Short name
+            </th>
+            <th className="border-b border-slate-700 p-2 text-slate-200/90">
+              Description
+            </th>
+            <th className="border-b border-slate-700 p-2 text-slate-200/90">
+              Flea price
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -154,7 +162,7 @@ const Items = () => {
                   void router.push(`/items/${item.id}`);
                 }}
               >
-                <td className="border-b border-slate-700 p-2">
+                <td className="border-b border-slate-700 p-2 text-slate-200/90">
                   <div className="flex place-items-center gap-2">
                     <Image
                       src={item.baseImageLink}
@@ -166,8 +174,10 @@ const Items = () => {
                     {item.shortName}
                   </div>
                 </td>
-                <td className="border-b border-slate-700 p-2">{item.name}</td>
-                <td className="border-b border-slate-700 p-2">
+                <td className="border-b border-slate-700 p-2 text-slate-200/90">
+                  {item.name}
+                </td>
+                <td className="border-b border-slate-700 p-2 text-slate-200/90">
                   {item.sellFor.length === 0 && "n/a"}
                   {item.sellFor.map((price) => (
                     <span key={price.source}>
@@ -190,13 +200,13 @@ const Items = () => {
       <div className="mt-1 flex w-full justify-between">
         <button
           onClick={handlePreviousPage}
-          className="min-w-[80px] rounded-md  bg-slate-900/50 p-2 text-white"
+          className="min-w-[80px] rounded-md p-2 font-bold text-white"
         >
           Previous
         </button>
         <button
           onClick={handleNextPage}
-          className="min-w-[80px] rounded-md bg-slate-900/50 p-2 text-white"
+          className="min-w-[80px] rounded-md p-2 font-bold text-white"
         >
           Next
         </button>
