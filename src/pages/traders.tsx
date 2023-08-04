@@ -36,6 +36,7 @@ export default function Traders() {
     return response.json();
   };
 
+
   const { isLoading, error, data }: UseQueryResult<Traders> = useQuery({
     queryKey: ["traders"],
     queryFn: fetchTraders,

@@ -100,7 +100,6 @@ const Items = () => {
     }
   );
 
-  console.count();
 
   useEffect(() => {
     void updateURLParams();
