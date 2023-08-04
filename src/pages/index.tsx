@@ -89,14 +89,15 @@ const Items = () => {
       throw new Error("An error occurred");
     }
 
-    console.log("fetching...");
-    console.log("done...");
     return response.json();
   };
 
   const { isLoading, error, data, refetch }: UseQueryResult<Items> = useQuery(
     ["allItems", page],
-    () => fetchItems(page)
+    () => fetchItems(page),
+    {
+      refetchOnWindowFocus: false,
+    }
   );
 
   console.count();
