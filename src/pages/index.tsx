@@ -92,14 +92,19 @@ const Items = () => {
     return response.json();
   };
 
-  const { isLoading, error, data, refetch }: UseQueryResult<Items> = useQuery(
+  const {
+    isLoading,
+    isRefetching,
+    error,
+    data,
+    refetch,
+  }: UseQueryResult<Items> = useQuery(
     ["allItems", page],
     () => fetchItems(page),
     {
       refetchOnWindowFocus: false,
     }
   );
-
 
   useEffect(() => {
     void updateURLParams();
@@ -127,10 +132,16 @@ const Items = () => {
   return (
     <>
       <div className="mb-4 flex flex-row items-center gap-4">
-        <h3 className="text-2xl font-bold text-slate-200/90">Items</h3>
+        <h3 className="text-2xl font-bold text-slate-200/90">
+          Items{" "}
+          <span className="text-sm font-normal opacity-60">
+            {isRefetching && `(Refetching)`}
+          </span>
+        </h3>
       </div>
       <form>
         <input
+          autoFocus
           type="text"
           placeholder="Search items..."
           className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
@@ -174,7 +185,7 @@ const Items = () => {
                       src={item.baseImageLink}
                       width={50}
                       height={50}
-                      className="max-h-[100px] max-w-[100px]"
+                      className="max-w-auto max-h-auto"
                       alt={`${item.shortName}' grid image'`}
                     />
                     {item.shortName}
