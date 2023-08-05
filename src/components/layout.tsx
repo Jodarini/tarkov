@@ -21,8 +21,8 @@ export default function Layout({ children }: LayoutProps) {
                 <ul className="flex gap-4 font-bold text-slate-200">
                   <li>
                     <Link
-                      href="/?page=1"
-                      className="rounded-md p-2 hover:bg-slate-900/50"
+                      href="/"
+                      className="rounded-md bg-slate-500 bg-opacity-20 p-2 hover:bg-slate-900/50"
                     >
                       Home
                     </Link>
@@ -30,7 +30,7 @@ export default function Layout({ children }: LayoutProps) {
                   <li>
                     <Link
                       href="/traders"
-                      className="rounded-md p-2 hover:bg-slate-900/50"
+                      className="rounded-md bg-slate-500 bg-opacity-20 p-2 hover:bg-slate-900/50"
                     >
                       Traders
                     </Link>

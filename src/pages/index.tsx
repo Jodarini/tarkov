@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import type { ChangeEvent } from "react";
+import { useEffect, useState, useRef } from "react";
+import type { ChangeEvent, Ref, RefObject } from "react";
 
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
@@ -58,6 +58,13 @@ const Items = () => {
   const limit = 10;
   const [page, setPage] = useState(1);
   const [searchParams, setSearchParams] = useState<string>();
+  const searchInputRef = useRef();
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
     router,
@@ -142,6 +149,7 @@ const Items = () => {
       <form>
         <input
           autoFocus
+          ref={searchInputRef}
           type="text"
           placeholder="Search items..."
           className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
