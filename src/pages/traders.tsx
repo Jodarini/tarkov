@@ -36,7 +36,6 @@ export default function Traders() {
     return response.json();
   };
 
-
   const { isLoading, error, data }: UseQueryResult<Traders> = useQuery({
     queryKey: ["traders"],
     queryFn: fetchTraders,
@@ -47,76 +46,26 @@ export default function Traders() {
   return (
     <>
       <h3 className="mb-4 text-2xl font-bold">Traders</h3>
-      <table className="border-collapse border-slate-600 text-left">
-        <thead>
-          <tr className="border-b border-slate-600 p-2">
-            <th colSpan={2} className="p-2 text-center">
-              Name
-            </th>
-            <th className="p-2">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading && (
-            <>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-              <tr className="border-b border-slate-600">
-                <td className="p-2">loading...</td>
-                <td className="p-2"></td>
-                <td className="p-2"></td>
-              </tr>
-            </>
-          )}
-          {data?.data.traders.map((trader) => (
-            <tr className="border-b border-slate-600" key={trader.name}>
-              <td className="p-2">
-                <Image
-                  width={100}
-                  height={100}
-                  alt={trader.name}
-                  src={trader.imageLink}
-                />
-              </td>
-              <td className="p-2">{trader.name}</td>
-              <td className="p-2">{trader.description}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {data?.data.traders.map((trader) => (
+        <div
+          className="flex gap-10 border-b-[1px] border-b-slate-400"
+          key={trader.name}
+        >
+          <div className="flex flex-col gap-4 p-2 md:flex-row">
+            <div className="flex min-w-[100px] flex-col">
+              <Image
+                width={50}
+                height={50}
+                alt={trader.name}
+                className="min-w-[100px] self-center"
+                src={trader.imageLink}
+              />
+              <caption>{trader.name}</caption>
+            </div>
+            <p>{trader.description}</p>
+          </div>
+        </div>
+      ))}
     </>
   );
 }

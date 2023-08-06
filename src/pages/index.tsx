@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import type { ChangeEvent, Ref, RefObject } from "react";
+import type { ChangeEvent } from "react";
 
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
@@ -58,7 +58,7 @@ const Items = () => {
   const limit = 10;
   const [page, setPage] = useState(1);
   const [searchParams, setSearchParams] = useState<string>();
-  const searchInputRef = useRef();
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (searchInputRef.current) {
@@ -180,7 +180,7 @@ const Items = () => {
             data.data !== null &&
             data.data.items.map((item) => (
               <tr
-                className="cursor-pointer border-b text-lg hover:bg-slate-900/50"
+                className="cursor-pointer border-b text-lg hover:bg-slate-900/50 active:bg-slate-900/50"
                 key={item.id}
                 role="link"
                 onClick={() => {
