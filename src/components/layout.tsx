@@ -22,7 +22,7 @@ export default function Layout({ children }: LayoutProps) {
                   <li>
                     <Link
                       href="/"
-                      className="rounded-md bg-slate-500 bg-opacity-20 p-2 hover:bg-slate-900/50"
+                      className="rounded-md bg-slate-500 bg-opacity-20 p-2 hover:bg-slate-900/50 focus:bg-slate-900/50 active:bg-slate-900/50"
                     >
                       Home
                     </Link>
@@ -30,7 +30,7 @@ export default function Layout({ children }: LayoutProps) {
                   <li>
                     <Link
                       href="/traders"
-                      className="rounded-md bg-slate-500 bg-opacity-20 p-2 hover:bg-slate-900/50"
+                      className="rounded-md bg-slate-500 bg-opacity-20 p-2 hover:bg-slate-900/50 active:bg-slate-900/50"
                     >
                       Traders
                     </Link>
