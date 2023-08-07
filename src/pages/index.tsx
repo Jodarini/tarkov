@@ -119,6 +119,8 @@ const Items = () => {
   }, [searchParams]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setPage(1);
+    void router.push(``);
     let value: string | undefined = e.target.value;
     if (value.length < 1) value = undefined;
     setSearchParams(value);
@@ -140,7 +142,7 @@ const Items = () => {
     <>
       <div className="mb-4 flex flex-row items-center gap-4">
         <h3 className="text-2xl font-bold text-slate-200/90">
-          Items{" "}
+          Items
           <span className="text-sm font-normal opacity-60">
             {isRefetching && `(Refetching)`}
           </span>
