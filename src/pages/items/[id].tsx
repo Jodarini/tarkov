@@ -72,7 +72,7 @@ const Items = () => {
           <Image
             src={itemById.image512pxLink}
             width={100}
-            className="max-h-[100px] max-w-[100px]"
+            className="max-h-[100px] max-w-[100px] self-center"
             height={100}
             alt={itemById.name}
           />

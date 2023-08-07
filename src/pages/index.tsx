@@ -182,10 +182,14 @@ const Items = () => {
               <tr
                 className="cursor-pointer border-b text-lg hover:bg-slate-900/50 active:bg-slate-900/50"
                 key={item.id}
+                tabIndex={0}
                 role="link"
                 onClick={() => {
                   void router.push(`/items/${item.id}`);
                 }}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && void router.push(`/items/${item.id}`)
+                }
               >
                 <td className="border-b border-slate-700 p-2 text-slate-200/90">
                   <div className="flex place-items-center gap-2">
