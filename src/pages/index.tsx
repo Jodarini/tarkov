@@ -73,7 +73,8 @@ const Items = () => {
 
   useEffect(() => {
     router.query.page && setPage(Number(router.query.page));
-  }, [router.query.page]);
+    router.query.search && setSearch(String(router.query.search));
+  }, [router.query.page, router.query.search]);
 
   const fetchItems = async (page: number) => {
     const offset = (page - 1) * limit;
