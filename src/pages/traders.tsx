@@ -46,6 +46,15 @@ export default function Traders() {
   return (
     <>
       <h3 className="mb-4 text-2xl font-bold">Traders</h3>
+      {isLoading && (
+        <>
+          <div className="flex gap-10 border-b-[1px] border-b-slate-400">
+            <div className="flex flex-col gap-4 p-2 md:flex-row">
+              <div className="flex min-w-[100px] flex-col">Loading...</div>
+            </div>
+          </div>
+        </>
+      )}
       {data?.data.traders.map((trader) => (
         <div
           className="flex gap-10 border-b-[1px] border-b-slate-400"
