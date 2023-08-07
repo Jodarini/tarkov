@@ -57,7 +57,7 @@ const Items = () => {
   const router = useRouter();
   const limit = 10;
   const [page, setPage] = useState(1);
-  const [searchParams, setSearchParams] = useState<string>();
+  const [search, setSearch] = useState<string>();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ const Items = () => {
         variables: {
           limit: limit,
           offset: offset,
-          name: searchParams,
+          name: search,
         },
       }),
     });
@@ -116,14 +116,17 @@ const Items = () => {
   useEffect(() => {
     void updateURLParams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [search]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setPage(1);
-    void router.push(``);
     let value: string | undefined = e.target.value;
     if (value.length < 1) value = undefined;
-    setSearchParams(value);
+    setSearch((prev) => (prev = value));
+    void router.push({
+      query: { search: value },
+    });
+    console.log(search);
   };
 
   const handleDebounceSearch = debounce(handleSearch, 800);
