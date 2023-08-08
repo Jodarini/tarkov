@@ -56,15 +56,11 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
+  const initialSearch = router.query.search || undefined; // Initialize with an empty string
+  const [search, setSearch] = useState(initialSearch); // Use state for search
+  // let search = router.query.search || undefined;
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState<string>();
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, []);
 
   const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
     router,
@@ -72,11 +68,22 @@ const Items = () => {
   );
 
   useEffect(() => {
-    router.query.page && setPage(Number(router.query.page));
-    router.query.search && setSearch(String(router.query.search));
-  }, [router.query.page, router.query.search]);
+    setSearch(initialSearch);
+    searchInputRef.current.value = initialSearch || "";
+  }, [initialSearch]);
 
-  const fetchItems = async (page: number) => {
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+      searchInputRef.current.value = initialSearch;
+    }
+  }, []);
+
+  useEffect(() => {
+    router.query.page && setPage(Number(router.query.page));
+  }, [router.query.page]);
+
+  const fetchItems = async (page: number, searchQuery: string) => {
     const offset = (page - 1) * limit;
     const response = await fetch("https://api.tarkov.dev/graphql", {
       method: "POST",
@@ -88,7 +95,7 @@ const Items = () => {
         variables: {
           limit: limit,
           offset: offset,
-          name: search,
+          name: searchQuery,
         },
       }),
     });
@@ -96,7 +103,6 @@ const Items = () => {
     if (!response.ok) {
       throw new Error("An error occurred");
     }
-
     return response.json();
   };
 
@@ -107,14 +113,17 @@ const Items = () => {
     data,
     refetch,
   }: UseQueryResult<Items> = useQuery(
-    ["allItems", page],
-    () => fetchItems(page),
+    ["allItems", page, search],
+    () => fetchItems(page, search),
     {
       refetchOnWindowFocus: false,
     }
   );
 
   useEffect(() => {
+    if (search && search?.length < 1) {
+      setSearch(undefined);
+    }
     void updateURLParams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
@@ -123,11 +132,10 @@ const Items = () => {
     setPage(1);
     let value: string | undefined = e.target.value;
     if (value.length < 1) value = undefined;
-    setSearch((prev) => (prev = value));
+    // setSearch((prev) => (prev = value));
     void router.push({
       query: { search: value },
     });
-    console.log(search);
   };
 
   const handleDebounceSearch = debounce(handleSearch, 800);
@@ -141,6 +149,7 @@ const Items = () => {
   };
 
   if (error) return "an error ocurred: ";
+  const items = data?.data.items;
 
   return (
     <>
@@ -182,9 +191,8 @@ const Items = () => {
               <td>loading...</td>
             </tr>
           )}
-          {data &&
-            data.data !== null &&
-            data.data.items.map((item) => (
+          {items &&
+            items.map((item) => (
               <tr
                 className="cursor-pointer border-b text-lg hover:bg-slate-900/50 active:bg-slate-900/50"
                 key={item.id}
