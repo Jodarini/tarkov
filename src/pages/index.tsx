@@ -75,7 +75,6 @@ const Items = () => {
   useEffect(() => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
-      searchInputRef.current.value = initialSearch;
     }
   }, []);
 
