@@ -58,14 +58,8 @@ const Items = () => {
   const limit = 10;
   const initialSearch = router.query.search || undefined; // Initialize with an empty string
   const [search, setSearch] = useState(initialSearch); // Use state for search
-  // let search = router.query.search || undefined;
   const [page, setPage] = useState(1);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
-    router,
-    page
-  );
 
   useEffect(() => {
     setSearch(initialSearch);
@@ -120,32 +114,32 @@ const Items = () => {
   );
 
   useEffect(() => {
-    if (search && search?.length < 1) {
-      setSearch(undefined);
-    }
-    void updateURLParams();
+    void refetchQuery();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setPage(1);
     let value: string | undefined = e.target.value;
     if (value.length < 1) value = undefined;
-    // setSearch((prev) => (prev = value));
     void router.push({
-      query: { search: value },
+      query: { search: value, page: 1 },
     });
   };
 
   const handleDebounceSearch = debounce(handleSearch, 800);
 
-  const updateURLParams = async () => {
+  const refetchQuery = async () => {
     try {
       await refetch();
     } catch (error) {
       console.error(error);
     }
   };
+
+  const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
+    router,
+    page
+  );
 
   if (error) return "an error ocurred: ";
   const items = data?.data.items;

@@ -21,7 +21,7 @@ export default function Layout({ children }: LayoutProps) {
                 <ul className="flex gap-4 font-bold text-slate-200">
                   <li>
                     <Link
-                      href="/"
+                      href="/?page=1"
                       className="rounded-md bg-slate-500 bg-opacity-20 p-2 hover:bg-slate-900/50 focus:bg-slate-900/50 active:bg-slate-900/50"
                     >
                       Home
