@@ -15,7 +15,7 @@ export default function Layout({ children }: LayoutProps) {
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="container flex flex-col items-center justify-center px-4 py-4 ">
-          <div className="flex w-full flex-col-reverse items-center justify-between gap-2 p-4 md:flex-row">
+          <div className="flex w-full flex-col-reverse items-center justify-between mb-q  gap-2 md:flex-row md:p-4">
             <header className="justify-self-center">
               <nav>
                 <ul className="flex gap-4 font-bold text-slate-200">
@@ -42,7 +42,7 @@ export default function Layout({ children }: LayoutProps) {
               Tarkov <span className="text-yellow-600">T3</span> App
             </h1>
           </div>
-          <div className="flex w-full flex-col rounded-xl p-4 text-white">
+          <div className="flex w-full flex-col text-white md:p-4">
             {children}
           </div>
         </div>

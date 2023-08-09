@@ -24,6 +24,7 @@ interface Items {
       sellFor: {
         source: string;
         priceRUB: number;
+        price: number;
       }[];
     }[];
   };
@@ -38,8 +39,9 @@ const GET_ITEMS = gql`
       description
       baseImageLink
       sellFor {
-        priceRUB
         source
+        priceRUB
+        price
       }
     }
   }
@@ -148,13 +150,10 @@ const Items = () => {
 
   return (
     <>
-      <div className="mb-4 flex flex-row items-center gap-4">
-        <h3 className="text-2xl font-bold text-slate-200/90">
-          Items
-          <span className="text-sm font-normal opacity-60">
-            {isRefetching && `(Refetching)`}
-          </span>
-        </h3>
+      <div className="mb-4 flex flex-row items-center ">
+        <span className="text-sm font-normal opacity-60">
+          {isRefetching && `(Refetching)`}
+        </span>
       </div>
       <form>
         <input
@@ -166,75 +165,77 @@ const Items = () => {
           onChange={handleDebounceSearch}
         />
       </form>
-      <table className="border-collapse text-left">
-        <thead>
-          <tr>
-            <th className="border-b border-slate-700 p-2 text-slate-200/90">
-              Short name
-            </th>
-            <th className="border-b border-slate-700 p-2 text-slate-200/90">
-              Description
-            </th>
-            <th className="border-b border-slate-700 p-2 text-slate-200/90">
-              Flea price
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading && (
-            <tr>
-              <td>loading...</td>
+      <div className="max-w-full overflow-x-scroll">
+        <table className="w-full border-collapse text-left">
+          <thead>
+            <tr className="md:text-md text-sm">
+              <th className="border-b border-slate-700 p-2 text-slate-200/90">
+                Short name
+              </th>
+              <th className="border-b border-slate-700 p-2 text-slate-200/90">
+                Description
+              </th>
+              <th className="border-b border-slate-700 p-2 text-slate-200/90">
+                Flea price
+              </th>
             </tr>
-          )}
-          {items &&
-            items.map((item) => (
-              <tr
-                className="cursor-pointer border-b text-lg hover:bg-slate-900/50 active:bg-slate-900/50"
-                key={item.id}
-                tabIndex={0}
-                role="link"
-                onClick={() => {
-                  void router.push(`/items/${item.id}`);
-                }}
-                onKeyDown={(e) =>
-                  e.key === "Enter" && void router.push(`/items/${item.id}`)
-                }
-              >
-                <td className="border-b border-slate-700 p-2 text-slate-200/90">
-                  <div className="flex place-items-center gap-2">
-                    <Image
-                      src={item.baseImageLink}
-                      width={50}
-                      height={50}
-                      className="max-h-[50px] min-h-[50px] self-center object-contain"
-                      alt={`${item.shortName}' grid image'`}
-                    />
-                    {item.shortName}
-                  </div>
-                </td>
-                <td className="border-b border-slate-700 p-2 text-slate-200/90">
-                  {item.name}
-                </td>
-                <td className="border-b border-slate-700 p-2 text-slate-200/90">
-                  {item.sellFor.length === 0 && "n/a"}
-                  {item.sellFor.map((price) => (
-                    <span key={price.source}>
-                      {!price && "n/a"}
-                      {price.source === "" && "n/a"}
-                      {price.source === "fleaMarket" &&
-                        `${price.priceRUB}` + " ₽"}
-                    </span>
-                  ))}
-                </td>
+          </thead>
+          <tbody>
+            {isLoading && (
+              <tr>
+                <td>loading...</td>
               </tr>
-            ))}
-          {data?.data.items.length === 0 && (
-            <tr>
-              <td>no items found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+            {items &&
+              items.map((item) => (
+                <tr
+                  className="cursor-pointer border-b text-sm hover:bg-slate-900/50 active:bg-slate-900/50 md:text-lg"
+                  key={item.id}
+                  tabIndex={0}
+                  role="link"
+                  onClick={() => {
+                    void router.push(`/items/${item.id}`);
+                  }}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && void router.push(`/items/${item.id}`)
+                  }
+                >
+                  <td className="min-w-fit border-b border-slate-700 p-2 text-center text-slate-200/90">
+                    <div className="flex flex-col place-items-center md:flex-row md:gap-2">
+                      <Image
+                        src={item.baseImageLink}
+                        width={50}
+                        height={50}
+                        className="max-h-[50px] min-h-[50px] self-center object-contain"
+                        alt={`${item.shortName}' grid image'`}
+                      />
+                      {item.shortName}
+                    </div>
+                  </td>
+                  <td className="border-b border-slate-700 p-2 text-slate-200/90">
+                    {item.name}
+                  </td>
+                  <td className="border-b border-slate-700 p-2 text-slate-200/90">
+                    {item.sellFor.length === 0 && "✖️"}
+                    {item.sellFor.map((price) => (
+                      <span key={price.source}>
+                        {!price && "✖️"}
+                        {price.source === "" && "✖️"}
+                        {price.source === "fleaMarket" &&
+                          `${price.priceRUB}` + " ₽"}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            {data?.data.items.length === 0 && (
+              <tr>
+                <td>no items found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="mt-1 flex w-full justify-between">
         <button
