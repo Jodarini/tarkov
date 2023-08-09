@@ -206,7 +206,7 @@ const Items = () => {
                       src={item.baseImageLink}
                       width={50}
                       height={50}
-                      className="max-w-auto max-h-auto"
+                      className="max-h-[50px] min-h-[50px] self-center object-contain"
                       alt={`${item.shortName}' grid image'`}
                     />
                     {item.shortName}
