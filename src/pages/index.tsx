@@ -56,14 +56,16 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  const initialSearch = router.query.search || undefined; // Initialize with an empty string
+  const initialSearch = router.query.search as string; // Initialize with an empty string
   const [search, setSearch] = useState(initialSearch); // Use state for search
   const [page, setPage] = useState(1);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSearch(initialSearch);
-    searchInputRef.current.value = initialSearch || "";
+    if (searchInputRef.current) {
+      searchInputRef.current.value = initialSearch || "";
+    }
   }, [initialSearch]);
 
   useEffect(() => {
@@ -76,7 +78,8 @@ const Items = () => {
     router.query.page && setPage(Number(router.query.page));
   }, [router.query.page]);
 
-  const fetchItems = async (page: number, searchQuery: string) => {
+  const fetchItems = async (page: number, searchQuery: string | undefined) => {
+    if (searchQuery === null || searchQuery === "") searchQuery = undefined;
     const offset = (page - 1) * limit;
     const response = await fetch("https://api.tarkov.dev/graphql", {
       method: "POST",
