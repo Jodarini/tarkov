@@ -150,20 +150,23 @@ const Items = () => {
 
   return (
     <>
-      <div className="mb-4 flex flex-row items-center ">
-        <span className="text-sm font-normal opacity-60">
-          {isRefetching && `(Refetching)`}
-        </span>
-      </div>
+      <div className="mb-4 flex flex-row items-center "></div>
       <form>
-        <input
-          autoFocus
-          ref={searchInputRef}
-          type="text"
-          placeholder="Search items..."
-          className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
-          onChange={handleDebounceSearch}
-        />
+        <div className="relative">
+          <input
+            autoFocus
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search items..."
+            className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
+            onChange={handleDebounceSearch}
+          />
+          {isRefetching && (
+            <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm font-normal opacity-60">
+              refetching...
+            </span>
+          )}
+        </div>
       </form>
       <div className="max-w-full overflow-x-scroll">
         <table className="w-full border-collapse text-left">
