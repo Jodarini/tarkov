@@ -14,11 +14,11 @@ export default function Layout({ children }: LayoutProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="container flex flex-col items-center justify-center px-4 py-4 ">
-          <div className="flex w-full flex-col-reverse items-center justify-between mb-q  gap-2 md:flex-row md:p-4">
+        <div className="container flex flex-col items-center justify-center gap-4 px-4 py-4 ">
+          <div className="mb-q flex w-full flex-col-reverse items-center justify-between gap-4 md:flex-row md:p-4">
             <header className="justify-self-center">
               <nav>
-                <ul className="flex gap-4 font-bold text-slate-200">
+                <ul className="flex gap-4 font-semibold text-slate-200">
                   <li>
                     <Link
                       href="/?page=1"

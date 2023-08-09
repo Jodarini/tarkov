@@ -63,7 +63,7 @@ const Items = () => {
 
   return (
     <>
-      <h3 className="mb-4 text-2xl font-bold text-slate-200">
+      <h3 className="mb-4 text-xl font-bold text-slate-200 md:text-2xl">
         {itemById?.name}
       </h3>
       <div className="flex flex-col gap-4 md:flex-row">
