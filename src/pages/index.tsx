@@ -240,13 +240,13 @@ const Items = () => {
       <div className="mt-1 flex w-full justify-between">
         <button
           onClick={handlePreviousPage}
-          className="min-w-[80px] rounded-md p-2 font-bold text-white"
+          className="min-w-[80px] rounded-md bg-slate-500 bg-opacity-20 p-2 font-semibold text-white hover:bg-slate-900/50 focus:bg-slate-900/50 active:bg-slate-900/50"
         >
           Previous
         </button>
         <button
           onClick={handleNextPage}
-          className="min-w-[80px] rounded-md p-2 font-bold text-white"
+          className="min-w-[80px] rounded-md bg-slate-500 bg-opacity-20 p-2 font-semibold text-white hover:bg-slate-900/50 focus:bg-slate-900/50 active:bg-slate-900/50"
         >
           Next
         </button>
