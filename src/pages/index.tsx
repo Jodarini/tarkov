@@ -122,8 +122,7 @@ const Items = () => {
   }, [search]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    let value: string | undefined = e.target.value;
-    if (value.length < 1) value = undefined;
+    const value = e.target.value;
     void router.push({
       query: { search: value, page: 1 },
     });
