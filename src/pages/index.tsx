@@ -240,7 +240,8 @@ const Items = () => {
       <div className="mt-1 flex w-full justify-between">
         <button
           onClick={handlePreviousPage}
-          className="min-w-[80px] rounded-md bg-slate-500 bg-opacity-20 p-2 font-semibold text-white hover:bg-slate-900/50 focus:bg-slate-900/50 active:bg-slate-900/50"
+          className="min-w-[80px] rounded-md bg-slate-500 bg-opacity-20 p-2 font-semibold text-white hover:bg-slate-900/50 focus:bg-slate-900/50 active:bg-slate-900/50 disabled:bg-slate-900/50 disabled:opacity-30"
+          disabled={page === 1}
         >
           Previous
         </button>
