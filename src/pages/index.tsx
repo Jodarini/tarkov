@@ -62,10 +62,10 @@ const Items = () => {
   let pageQuery = 1;
   if (router.query.search) {
     searchQuery = String(router.query.search);
-  } else searchQuery = "";
+  }
   if (router.query.page) {
     pageQuery = Number(router.query.page);
-  } else searchQuery = "";
+  }
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
