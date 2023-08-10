@@ -54,7 +54,7 @@ const Items = () => {
     return res.json();
   };
 
-  const { isLoading, error, data }: UseQueryResult<Item> = useQuery(
+  const { isLoading, data }: UseQueryResult<Item> = useQuery(
     ["getItem", item],
     () => fetchItem(item as string)
   );

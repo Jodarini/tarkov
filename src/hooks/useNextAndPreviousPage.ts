@@ -1,13 +1,16 @@
-import { useState } from "react";
 import type { NextRouter } from "next/router";
 
 const useNextAndPreviousPage = (router: NextRouter, page: number) => {
   const handleNextPage = () => {
     page++;
     const search = router.query.search;
-    void router.push({
-      query: { search, page },
-    });
+    router
+      .push({
+        query: { search, page },
+      })
+      .catch((error: string) => {
+        throw new Error(error);
+      });
 
     return page;
   };
@@ -15,9 +18,13 @@ const useNextAndPreviousPage = (router: NextRouter, page: number) => {
   const handlePreviousPage = () => {
     page--;
     const search = router.query.search;
-    void router.push({
-      query: { search, page },
-    });
+    router
+      .push({
+        query: { search, page },
+      })
+      .catch((error: string) => {
+        throw new Error(error);
+      });
     return page;
   };
 

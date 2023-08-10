@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { ChangeEvent } from "react";
 
 import { useQuery } from "react-query";
@@ -58,7 +58,7 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  const searchQuery = router.query.search as string;
+  const searchQuery = String(router.query.search);
   const pageQuery = Number(router.query.page);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -114,23 +114,25 @@ const Items = () => {
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    void router.push({
-      query: { search: value, page: 1 },
-    });
+    router
+      .push({
+        query: { search: value, page: 1 },
+      })
+      .catch((error: string) => {
+        throw new Error(error);
+      });
   };
 
   const handleDebounceSearch = debounce(handleSearch, 800);
 
-  const refetchQuery = async () => {
-    try {
-      await refetch();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
-    void refetchQuery();
+    const refetchQuery = async () => {
+      await refetch();
+    };
+
+    refetchQuery().catch((error: string) => {
+      throw new Error(error);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
@@ -191,11 +193,18 @@ const Items = () => {
                   tabIndex={0}
                   role="link"
                   onClick={() => {
-                    void router.push(`/items/${item.id}`);
+                    router.push(`/items/${item.id}`).catch((error: string) => {
+                      throw new Error(error);
+                    });
                   }}
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && void router.push(`/items/${item.id}`)
-                  }
+                  onKeyDown={(e) => {
+                    e.key === "Enter" &&
+                      router
+                        .push(`/items/${item.id}`)
+                        .catch((error: string) => {
+                          throw new Error(error);
+                        });
+                  }}
                 >
                   <td className="min-w-fit border-b border-slate-700 p-2 text-center text-slate-200/90">
                     <div className="flex flex-col place-items-center md:flex-row md:gap-2">
