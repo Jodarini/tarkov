@@ -58,8 +58,8 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [pageQuery, setPageQuery] = useState<number>(1);
+  const [searchQuery, setSearchQuery] = useState<string>();
+  const [pageQuery, setPageQuery] = useState<number>();
 
   useEffect(() => {
     const { search, page } = router.query;
