@@ -102,10 +102,9 @@ const Items = () => {
     );
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
     router
       .push({
-        query: { search: value, page: 1 },
+        query: { search: e.target.value, page: 1 },
       })
       .catch((error: string) => {
         throw new Error(error);
@@ -113,11 +112,13 @@ const Items = () => {
   };
 
   const handleDebounceSearch = debounce(handleSearch, 800);
+  useEffect(() => {
+    searchInputRef.current && searchInputRef.current.focus();
+  }, []);
 
   useEffect(() => {
     if (searchInputRef.current) {
       searchInputRef.current.value = searchQuery || "";
-      searchInputRef.current.focus();
     }
 
     const refetchQuery = async () => {
