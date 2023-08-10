@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 
 import { useQuery } from "react-query";
@@ -58,27 +58,18 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  let searchQuery = "";
-  let pageQuery = 1;
-  if (router.query.search) {
-    searchQuery = String(router.query.search);
-  }
-  if (router.query.page) {
-    pageQuery = Number(router.query.page);
-  }
+  const [pageQuery, setPageQuery] = useState<number>(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  useEffect(() => {
+    if (router.query.search) {
+      setSearchQuery(String(router.query.search));
+    } else setSearchQuery("");
+
+    if (router.query.page) {
+      setPageQuery(Number(router.query.page));
+    } else setPageQuery(1);
+  }, [router.query]);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.value = searchQuery || "";
-    }
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, []);
 
   const fetchItems = async (page: number, searchQuery: string | undefined) => {
     if (searchQuery === null || searchQuery === "") searchQuery = undefined;
@@ -127,6 +118,11 @@ const Items = () => {
   const handleDebounceSearch = debounce(handleSearch, 800);
 
   useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.value = searchQuery || "";
+      searchInputRef.current.focus();
+    }
+
     const refetchQuery = async () => {
       await refetch();
     };
@@ -134,8 +130,7 @@ const Items = () => {
     refetchQuery().catch((error: string) => {
       throw new Error(error);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+  }, [searchQuery, refetch]);
 
   const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
     router,
