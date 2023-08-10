@@ -58,27 +58,21 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  const initialSearch = router.query.search as string; // Initialize with an empty string
-  const [search, setSearch] = useState(initialSearch); // Use state for search
-  const [page, setPage] = useState(1);
+  const searchQuery = router.query.search as string;
+  const pageQuery = Number(router.query.page);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setSearch(initialSearch);
     if (searchInputRef.current) {
-      searchInputRef.current.value = initialSearch || "";
+      searchInputRef.current.value = searchQuery || "";
     }
-  }, [initialSearch]);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, []);
-
-  useEffect(() => {
-    router.query.page && setPage(Number(router.query.page));
-  }, [router.query.page]);
 
   const fetchItems = async (page: number, searchQuery: string | undefined) => {
     if (searchQuery === null || searchQuery === "") searchQuery = undefined;
@@ -111,17 +105,12 @@ const Items = () => {
     data,
     refetch,
   }: UseQueryResult<Items> = useQuery(
-    ["allItems", page, search],
-    () => fetchItems(page, search),
+    ["allItems", pageQuery, searchQuery],
+    () => fetchItems(pageQuery, searchQuery),
     {
       refetchOnWindowFocus: false,
     }
   );
-
-  useEffect(() => {
-    void refetchQuery();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -140,9 +129,14 @@ const Items = () => {
     }
   };
 
+  useEffect(() => {
+    void refetchQuery();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
   const { handleNextPage, handlePreviousPage } = useNextAndPreviousPage(
     router,
-    page
+    pageQuery
   );
 
   if (error) return "an error ocurred: ";
@@ -244,7 +238,7 @@ const Items = () => {
         <button
           onClick={handlePreviousPage}
           className="min-w-[80px] rounded-md bg-slate-500 bg-opacity-20 p-2 font-semibold text-white hover:bg-slate-900/50 focus:bg-slate-900/50 active:bg-slate-900/50 disabled:bg-slate-900/50 disabled:opacity-30"
-          disabled={page === 1}
+          disabled={pageQuery === 1}
         >
           Previous
         </button>
