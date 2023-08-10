@@ -58,16 +58,13 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  const [pageQuery, setPageQuery] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  useEffect(() => {
-    if (router.query.search) {
-      setSearchQuery(String(router.query.search));
-    } else setSearchQuery("");
+  const [pageQuery, setPageQuery] = useState<number>(1);
 
-    if (router.query.page) {
-      setPageQuery(Number(router.query.page));
-    } else setPageQuery(1);
+  useEffect(() => {
+    const { search, page } = router.query;
+    setSearchQuery(search ? String(search) : "");
+    setPageQuery(page ? Number(page) : 1);
   }, [router.query]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
