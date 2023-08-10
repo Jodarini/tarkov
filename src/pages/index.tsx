@@ -58,8 +58,14 @@ export default function Home({}) {
 const Items = () => {
   const router = useRouter();
   const limit = 10;
-  const searchQuery = String(router.query.search);
-  const pageQuery = Number(router.query.page);
+  let searchQuery = "";
+  let pageQuery = 1;
+  if (router.query.search) {
+    searchQuery = String(router.query.search);
+  } else searchQuery = "";
+  if (router.query.page) {
+    pageQuery = Number(router.query.page);
+  } else searchQuery = "";
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -98,19 +104,14 @@ const Items = () => {
     return response.json();
   };
 
-  const {
-    isLoading,
-    isRefetching,
-    error,
-    data,
-    refetch,
-  }: UseQueryResult<Items> = useQuery(
-    ["allItems", pageQuery, searchQuery],
-    () => fetchItems(pageQuery, searchQuery),
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { isLoading, error, data, refetch, isFetching }: UseQueryResult<Items> =
+    useQuery(
+      ["allItems", pageQuery, searchQuery],
+      () => fetchItems(pageQuery, searchQuery),
+      {
+        refetchOnWindowFocus: false,
+      }
+    );
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -157,9 +158,9 @@ const Items = () => {
             className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
             onChange={handleDebounceSearch}
           />
-          {isRefetching && (
+          {isFetching && (
             <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm font-normal opacity-60">
-              refetching...
+              fetching...
             </span>
           )}
         </div>
