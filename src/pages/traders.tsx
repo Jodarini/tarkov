@@ -69,7 +69,7 @@ export default function Traders() {
                 className="min-w-[100px] self-center"
                 src={trader.imageLink}
               />
-              <caption>{trader.name}</caption>
+              <span className="text-center">{trader.name}</span>
             </div>
             <p>{trader.description}</p>
           </div>
