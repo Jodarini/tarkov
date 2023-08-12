@@ -39,6 +39,8 @@ export default function Traders() {
     queryFn: fetchTraders,
   });
 
+  const traders = data?.data.traders;
+
   if (error) return "An error ocurred";
 
   return (

@@ -31,6 +31,16 @@ interface SellFor {
   price: number;
 }
 
+interface Traders {
+  data: {
+    traders: {
+      name: string;
+      imageLink: string;
+      description: string;
+    }[];
+  };
+}
+
 const GET_ITEMS = gql`
   query ($limit: Int, $offset: Int, $name: [String]) {
     items(limit: $limit, offset: $offset, names: $name) {
@@ -102,6 +112,32 @@ const Items = () => {
       }
     );
 
+  const fetchTraders = async () => {
+    const response = await fetch("https://api.tarkov.dev/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `
+            query allTraders {
+             traders{
+               name
+               imageLink
+               description
+               }
+             }
+        `,
+      }),
+    });
+    return response.json();
+  };
+
+  const { data: traderData }: UseQueryResult<Traders> = useQuery({
+    queryKey: ["traders"],
+    queryFn: fetchTraders,
+  });
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     router
       .push({
@@ -138,9 +174,33 @@ const Items = () => {
 
   if (error) return "an error ocurred: ";
   const items = data?.data.items;
+  const traders = traderData?.data.traders;
+  // const traders = data2.data.traders;
 
   const hasFleaMarketPrice = (item: SellFor[]): boolean => {
     return !item.some(({ source }) => source === "fleaMarket");
+  };
+
+  const highestPrice = (item: SellFor[]) => {
+    let bestPrice = 0;
+    let bestVendor = "";
+
+    item.forEach(({ price, source }) => {
+      if (source === "fleaMarket") return;
+
+      if (bestPrice < price) {
+        bestPrice = price;
+        bestVendor = source;
+      }
+    });
+    const bestVendorData = traders?.find(
+      (trader) => trader.name.toLowerCase() === bestVendor
+    );
+    return {
+      bestVendorLink: bestVendorData?.imageLink as string,
+      bestVendorName: bestVendorData?.name as string,
+      bestPrice,
+    };
   };
 
   return (
@@ -175,6 +235,9 @@ const Items = () => {
               </th>
               <th className="border-b border-slate-700 p-2 text-slate-200/90">
                 Flea price
+              </th>
+              <th className="border-b border-slate-700 p-2 text-slate-200/90">
+                Best sold to
               </th>
             </tr>
           </thead>
@@ -224,12 +287,35 @@ const Items = () => {
                     {item.sellFor.map((price) => (
                       <span key={price.source}>
                         {price.source.includes("fleaMarket") &&
-                          `${price.priceRUB}` + " ₽"}
+                          `${price.priceRUB} ₽`}
                       </span>
                     ))}
                     <span title="This item can't be sold on the flea market">
-                      {hasFleaMarketPrice(item.sellFor) && "️️️️️️✖️"}
+                      {hasFleaMarketPrice(item.sellFor) && "✖️"}
                     </span>
+                  </td>
+                  <td className="border-b border-slate-700 p-2 text-slate-200/90">
+                    {!highestPrice(item.sellFor).bestVendorLink ? (
+                      <span title="This item is not sold by any vendor">
+                        ✖️
+                      </span>
+                    ) : (
+                      <span
+                        className="flex flex-col text-center md:flex-row"
+                        title={`${highestPrice(item.sellFor).bestVendorName}`}
+                      >
+                        {highestPrice(item.sellFor).bestVendorLink && (
+                          <Image
+                            src={highestPrice(item.sellFor).bestVendorLink}
+                            width={50}
+                            height={50}
+                            className="max-h-[25px] min-h-[25px] self-center object-contain"
+                            alt={`${item.shortName}' grid image'`}
+                          />
+                        )}
+                        {`${highestPrice(item.sellFor).bestPrice} ₽`}
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

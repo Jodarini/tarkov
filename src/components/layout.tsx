@@ -39,7 +39,7 @@ export default function Layout({ children }: LayoutProps) {
               </nav>
             </header>
             <h1 className="justify-self-start text-3xl font-extrabold tracking-tight text-white md:text-2xl">
-              <span className="text-yellow-600">Tarkov</span> App
+              <span className="text-yellow-600">Tarkov</span>App
             </h1>
           </div>
           <div className="flex w-full flex-col text-white md:p-4">
