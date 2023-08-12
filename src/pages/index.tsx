@@ -13,7 +13,7 @@ import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
 
 import { debounce } from "lodash";
 
-interface Items {
+interface Item {
   data: {
     items: {
       id: number;
@@ -21,13 +21,14 @@ interface Items {
       shortName: string;
       description: string;
       baseImageLink: string;
-      sellFor: {
-        source: string;
-        priceRUB: number;
-        price: number;
-      }[];
+      sellFor: SellFor[];
     }[];
   };
+}
+interface SellFor {
+  source: string;
+  priceRUB: number;
+  price: number;
 }
 
 const GET_ITEMS = gql`
@@ -92,7 +93,7 @@ const Items = () => {
     return response.json();
   };
 
-  const { isLoading, error, data, refetch, isFetching }: UseQueryResult<Items> =
+  const { isLoading, error, data, refetch, isFetching }: UseQueryResult<Item> =
     useQuery(
       ["allItems", pageQuery, searchQuery],
       () => fetchItems(pageQuery, searchQuery),
@@ -137,6 +138,10 @@ const Items = () => {
 
   if (error) return "an error ocurred: ";
   const items = data?.data.items;
+
+  const hasFleaMarketPrice = (item: SellFor[]): boolean => {
+    return !item.some(({ source }) => source === "fleaMarket");
+  };
 
   return (
     <>
@@ -216,15 +221,13 @@ const Items = () => {
                     {item.name}
                   </td>
                   <td className="border-b border-slate-700 p-2 text-slate-200/90">
-                    {item.sellFor.length === 0 && "✖️"}
                     {item.sellFor.map((price) => (
                       <span key={price.source}>
-                        {!price && "✖️"}
-                        {price.source === "" && "✖️"}
-                        {price.source === "fleaMarket" &&
+                        {price.source.includes("fleaMarket") &&
                           `${price.priceRUB}` + " ₽"}
                       </span>
                     ))}
+                    {hasFleaMarketPrice(item.sellFor) && "️️️️️️✖️"}
                   </td>
                 </tr>
               ))}
