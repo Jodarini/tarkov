@@ -168,7 +168,7 @@ const Items = () => {
           <thead>
             <tr className="md:text-md text-sm">
               <th className="border-b border-slate-700 p-2 text-slate-200/90">
-                Short name
+                Name
               </th>
               <th className="border-b border-slate-700 p-2 text-slate-200/90">
                 Description
@@ -227,7 +227,9 @@ const Items = () => {
                           `${price.priceRUB}` + " ₽"}
                       </span>
                     ))}
-                    {hasFleaMarketPrice(item.sellFor) && "️️️️️️✖️"}
+                    <span title="This item can't be sold on the flea market">
+                      {hasFleaMarketPrice(item.sellFor) && "️️️️️️✖️"}
+                    </span>
                   </td>
                 </tr>
               ))}
