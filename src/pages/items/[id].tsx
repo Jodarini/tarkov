@@ -77,7 +77,7 @@ const Items = () => {
             alt={itemById.name}
           />
         )}
-        <div>
+        <div className="[&>p]:mb-1">
           <p>
             <strong>Short name: </strong>
             {isLoading && <>Loading...</>}
