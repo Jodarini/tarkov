@@ -7,11 +7,11 @@ import type { UseQueryResult } from "react-query";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-import { gql } from "graphql-request";
-
 import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
 
 import { debounce } from "lodash";
+
+import { fetchItems, fetchTraders } from "~/services/fetch-api";
 
 interface Item {
   data: {
@@ -41,23 +41,6 @@ interface Traders {
   };
 }
 
-const GET_ITEMS = gql`
-  query ($limit: Int, $offset: Int, $name: [String]) {
-    items(limit: $limit, offset: $offset, names: $name) {
-      id
-      name
-      shortName
-      description
-      baseImageLink
-      sellFor {
-        source
-        priceRUB
-        price
-      }
-    }
-  }
-`;
-
 export default function Home({}) {
   return (
     <>
@@ -79,59 +62,19 @@ const Items = () => {
   }, [router.query]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchItems = async (page: number, searchQuery: string | undefined) => {
-    if (searchQuery === null || searchQuery === "") searchQuery = undefined;
-    const offset = (page - 1) * limit;
-    const response = await fetch("https://api.tarkov.dev/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: GET_ITEMS,
-        variables: {
-          limit: limit,
-          offset: offset,
-          name: searchQuery,
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("An error occurred");
+  const {
+    isLoading,
+    error,
+    data: itemData,
+    refetch,
+    isFetching,
+  }: UseQueryResult<Item> = useQuery(
+    ["allItems", pageQuery, searchQuery],
+    () => fetchItems(pageQuery, searchQuery, limit),
+    {
+      refetchOnWindowFocus: false,
     }
-    return response.json();
-  };
-
-  const { isLoading, error, data, refetch, isFetching }: UseQueryResult<Item> =
-    useQuery(
-      ["allItems", pageQuery, searchQuery],
-      () => fetchItems(pageQuery, searchQuery),
-      {
-        refetchOnWindowFocus: false,
-      }
-    );
-
-  const fetchTraders = async () => {
-    const response = await fetch("https://api.tarkov.dev/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-            query allTraders {
-             traders{
-               name
-               imageLink
-               description
-               }
-             }
-        `,
-      }),
-    });
-    return response.json();
-  };
+  );
 
   const { data: traderData }: UseQueryResult<Traders> = useQuery({
     queryKey: ["traders"],
@@ -173,9 +116,8 @@ const Items = () => {
   );
 
   if (error) return "an error ocurred: ";
-  const items = data?.data.items;
+  const items = itemData?.data.items;
   const traders = traderData?.data.traders;
-  // const traders = data2.data.traders;
 
   const hasFleaMarketPrice = (item: SellFor[]): boolean => {
     return !item.some(({ source }) => source === "fleaMarket");
@@ -212,15 +154,10 @@ const Items = () => {
             autoFocus
             ref={searchInputRef}
             type="text"
-            placeholder="Search items..."
+            placeholder={isFetching ? "fetching..." : "Search items"}
             className="w-full border-b border-b-slate-700 bg-slate-800/50 p-2 placeholder-slate-300"
             onChange={handleDebounceSearch}
           />
-          {isFetching && (
-            <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm font-normal opacity-60">
-              fetching...
-            </span>
-          )}
         </div>
       </form>
       <div className="max-w-full overflow-x-scroll">
@@ -319,7 +256,7 @@ const Items = () => {
                   </td>
                 </tr>
               ))}
-            {data?.data.items.length === 0 && (
+            {items?.length === 0 && (
               <tr>
                 <td>no items found</td>
               </tr>

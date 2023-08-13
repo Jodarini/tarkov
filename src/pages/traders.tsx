@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
 import Image from "next/image";
+import { fetchTraders } from "~/services/fetch-api";
 
 interface Traders {
   data: {
@@ -13,27 +14,6 @@ interface Traders {
 }
 
 export default function Traders() {
-  const fetchTraders = async () => {
-    const response = await fetch("https://api.tarkov.dev/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-            query allTraders {
-             traders{
-               name
-               imageLink
-               description
-               }
-             }
-        `,
-      }),
-    });
-    return response.json();
-  };
-
   const { isLoading, error, data }: UseQueryResult<Traders> = useQuery({
     queryKey: ["traders"],
     queryFn: fetchTraders,
@@ -55,12 +35,12 @@ export default function Traders() {
           </div>
         </>
       )}
-      {data?.data.traders.map((trader) => (
-        <div
-          className="flex gap-10 border-b-[1px] border-b-slate-400"
-          key={trader.name}
-        >
-          <div className="flex flex-col gap-4 p-2 md:flex-row">
+      {traders &&
+        traders.map((trader) => (
+          <div
+            className="flex flex-col gap-4 border-b-[1px] border-b-slate-400 p-2 md:flex-row "
+            key={trader.name}
+          >
             <div className="flex min-w-[100px] flex-col">
               <Image
                 width={50}
@@ -73,8 +53,7 @@ export default function Traders() {
             </div>
             <p>{trader.description}</p>
           </div>
-        </div>
-      ))}
+        ))}
     </>
   );
 }
