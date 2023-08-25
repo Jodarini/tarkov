@@ -25,6 +25,7 @@ interface Item {
     }[];
   };
 }
+
 interface SellFor {
   source: string;
   priceRUB: number;
@@ -64,7 +65,6 @@ const Items = () => {
 
   const {
     isLoading,
-    error,
     data: itemData,
     refetch,
     isFetching,
@@ -115,7 +115,6 @@ const Items = () => {
     pageQuery
   );
 
-  if (error) return "an error ocurred: ";
   const items = itemData?.data.items;
   const traders = traderData?.data.traders;
 
