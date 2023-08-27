@@ -42,7 +42,7 @@ interface Traders {
   };
 }
 
-export default function Home({}) {
+export default function Home({ }) {
   return (
     <>
       <Items />
@@ -146,7 +146,6 @@ const Items = () => {
 
   return (
     <>
-      <div className="mb-4 flex flex-row items-center "></div>
       <form>
         <div className="relative">
           <input
