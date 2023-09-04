@@ -1,11 +1,11 @@
-'use client'
+"use client";
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
@@ -43,7 +43,7 @@ interface Traders {
   };
 }
 
-export default function Home({ }) {
+export default function Home({}) {
   return (
     <>
       <Items />
@@ -53,6 +53,8 @@ export default function Home({ }) {
 
 const Items = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const limit = 10;
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [pageQuery, setPageQuery] = useState<number>(1);
