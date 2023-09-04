@@ -1,10 +1,11 @@
+'use client'
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 
 import { useQuery } from "react-query";
 import type { UseQueryResult } from "react-query";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import useNextAndPreviousPage from "~/hooks/useNextAndPreviousPage";
